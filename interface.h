@@ -35,6 +35,8 @@ namespace calc {
             format.setSwapInterval(1);
             QSurfaceFormat::setDefaultFormat(format);
 
+            setStyleSheet(Style::sheet("main_window"));
+
             QWidget *centralWidget = new QWidget(this);
             setCentralWidget(centralWidget);
             QHBoxLayout *mainLayout = new QHBoxLayout(centralWidget);

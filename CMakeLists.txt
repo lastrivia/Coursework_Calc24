@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.28)
 project(Calc)
 
-set(APP_VERSION "1.1")
-set(APP_VERSION_COMMA "1,1")
+set(APP_VERSION "1.2")
+set(APP_VERSION_COMMA "1,2")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
@@ -39,7 +39,6 @@ add_executable(Calc WIN32
         solver.cpp
         interface.h
         interface_menu.h
-        interface.cpp
         interface_settings.h
         interface_file.h
         interface_online_game.h

@@ -1,11 +1,9 @@
 #ifndef CALC_STYLE_H
 #define CALC_STYLE_H
 
-#include <string>
 #include <QString>
 #include <QMap>
 #include <QDir>
-#include <iostream>
 
 namespace calc {
 

@@ -1,0 +1,22 @@
+QListWidget {
+    border: none;
+    background-color: rgba(0, 0, 0, 0.0);
+}
+QListWidget::item {
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.0);
+    margin-bottom: 5px; 
+    color: black;
+}
+QListWidget::item:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+    color: #2a2a2a;
+}
+QListWidget::item:selected {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: none;
+}
+QListWidget::item:selected:active {
+    outline: none;
+}
