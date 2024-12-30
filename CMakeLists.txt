@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.28)
 project(Calc)
 
+set(APP_VERSION "1.1")
+set(APP_VERSION_COMMA "1,1")
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -9,6 +12,15 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_PREFIX_PATH "C:/Qt/6.7.3/mingw_64")
 set(CMAKE_EXE_LINKER_FLAGS "-static")
 
+set(CMAKE_RC_COMPILER_INIT "windres")
+add_definitions(-DAPP_VERSION="${APP_VERSION}")
+
+configure_file(
+        "${CMAKE_SOURCE_DIR}/version.rc.in"
+        "${CMAKE_BINARY_DIR}/version.rc"
+        @ONLY
+)
+
 find_package(Qt6 COMPONENTS
         Core
         Gui
@@ -16,6 +28,7 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 
 add_executable(Calc WIN32
+        "${CMAKE_BINARY_DIR}/version.rc"
         main.cpp
         rational.h
         rational.cpp

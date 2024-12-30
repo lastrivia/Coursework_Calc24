@@ -19,6 +19,10 @@
 #include "interface_online_game.h"
 #include "interface_settings.h"
 
+#ifndef APP_VERSION     // defined in CMakeLists
+#define APP_VERSION ""
+#endif
+
 namespace calc {
 
     class MainWindow : public QMainWindow {
@@ -89,8 +93,10 @@ namespace calc {
                 animationFloatUp->start(QAbstractAnimation::DeleteWhenStopped);
             });
 
-
-            setWindowTitle("24-Point Calculator");
+            QString title = "24-Point Calculator", appVersion = APP_VERSION;
+            if(!appVersion.isEmpty())
+                title = title + " v" + appVersion;
+            setWindowTitle(title);
             resize(960, 600);
         }
     };

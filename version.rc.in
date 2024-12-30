@@ -1,0 +1,15 @@
+#include <windows.h>
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION @APP_VERSION_COMMA@
+ PRODUCTVERSION @APP_VERSION_COMMA@
+ BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "FileVersion", "@APP_VERSION@"
+            VALUE "ProductVersion", "@APP_VERSION@"
+        END
+    END
+ END
