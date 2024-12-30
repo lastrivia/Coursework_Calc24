@@ -35,6 +35,7 @@ add_executable(Calc WIN32
         interface_basic.h
         poker.h
         poker.cpp
+        style.h
 )
 
 target_link_libraries(Calc
@@ -43,7 +44,7 @@ target_link_libraries(Calc
         Qt::Widgets
 )
 
-# CMake: Add DLLs
+# CMake: Add DLLs & extern resources
 
 set(DLL_FILES
         "C:/Qt/6.7.3/mingw_64/bin/libgcc_s_seh-1.dll"
@@ -51,15 +52,13 @@ set(DLL_FILES
         "C:/Qt/6.7.3/mingw_64/bin/libwinpthread-1.dll"
 )
 
-add_custom_command(TARGET Calc POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${DLL_FILES} ${CMAKE_BINARY_DIR}
+add_custom_target(CopyResources ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLL_FILES} ${CMAKE_BINARY_DIR}
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/img ${CMAKE_BINARY_DIR}/img
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/styles ${CMAKE_BINARY_DIR}/styles
 )
 
-# CMake: Add extern resources
-
-file(COPY ${CMAKE_SOURCE_DIR}/img DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${CMAKE_SOURCE_DIR}/styles DESTINATION ${CMAKE_BINARY_DIR})
+add_dependencies(Calc CopyResources)
 
 
 

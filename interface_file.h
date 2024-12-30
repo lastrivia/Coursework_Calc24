@@ -19,10 +19,11 @@
 
 #include "solver.h"
 #include "poker.h"
+#include "style.h"
 
 namespace calc {
 
-    class PageFile : public QWidget {
+    class InterfaceFile : public QWidget {
     Q_OBJECT
 
     private:
@@ -35,7 +36,9 @@ namespace calc {
         std::vector<std::string> file_result_strings; // TODO unused yet
 
     public:
-        PageFile(QWidget *parent = nullptr) : QWidget(parent) {
+        InterfaceFile(QWidget *parent = nullptr) : QWidget(parent) {
+
+            Style::sheet("button_white");
 
             QHBoxLayout *fileLayout = new QHBoxLayout;
 
@@ -46,53 +49,18 @@ namespace calc {
             fileLayout->addItem(new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Minimum));
 
             filePathInput = new QLineEdit;
-            filePathInput->setStyleSheet(
-                    "QLineEdit {"
-                    "    height: 28px;"
-                    "    border: 1px solid #BBBBBB;"
-                    "    border-radius: 8px;"
-                    "    background-color: #FFFFFF;"
-                    "    padding: 0 8px;"
-                    "    font-size: 12px;"
-                    "    color: black;"
-                    "}"
-                    "QLineEdit:hover {"
-                    "    border: 1px solid #FEFDFC;"
-                    "    background-color: #FEFDFC;"
-                    "}"
-                    "QLineEdit:focus {"
-                    "    border: 1px solid #BBBBBB;"
-                    "    background-color: #FEFDFC;"
-                    "}"
-            );
+            filePathInput->setStyleSheet(Style::sheet("edit_box"));
             fileLayout->addWidget(filePathInput);
 
             fileLayout->addItem(new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Minimum));
 
             openFileButton = new QPushButton("选择文件");
             openFileButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            openFileButton->setStyleSheet(
-                    "QPushButton {"
-                    "    height: 32px;"
-                    "    width: 120px;"
-                    "    border: 1px solid #BBBBBB;"
-                    "    background-color: #FFFFFF;"
-                    "    border-radius: 8px;"
-                    "    color: #000000;"
-                    "    font-size: 14px;"
-                    "}"
-                    "QPushButton:hover {"
-                    "    background-color: #FEFDFC;"
-                    "}"
-                    "QPushButton:pressed {"
-                    "    background-color: #FEFDFC;"
-                    "    color: #505050;"
-                    "}"
-            );
+            openFileButton->setStyleSheet(Style::sheet("button_white"));
             QFont font;
             font.setPointSize(11);
             openFileButton->setFont(font);
-            connect(openFileButton, &QPushButton::clicked, this, &PageFile::openFile);
+            connect(openFileButton, &QPushButton::clicked, this, &InterfaceFile::openFile);
             fileLayout->addWidget(openFileButton);
 
 
@@ -100,25 +68,8 @@ namespace calc {
 
             calculateButton = new QPushButton("执行运算");
             calculateButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            calculateButton->setStyleSheet(
-                    "QPushButton {"
-                    "    height: 32px;"
-                    "    width: 120px;"
-                    "    border: none;"
-                    "    background-color: #0067C0;"
-                    "    border-radius: 8px;"
-                    "    color: #FFFFFF;"
-                    "    font-size: 14px;"
-                    "}"
-                    "QPushButton:hover {"
-                    "    background-color: #1975C4;"
-                    "}"
-                    "QPushButton:pressed {"
-                    "    background-color: #1975C4;"
-                    "    color: #DDDDDD;"
-                    "}"
-            );
-            connect(calculateButton, &QPushButton::clicked, this, &PageFile::performCalculation);
+            calculateButton->setStyleSheet(Style::sheet("button_blue"));
+            connect(calculateButton, &QPushButton::clicked, this, &InterfaceFile::performCalculation);
             operationLayout->addWidget(calculateButton);
 
             operationLayout->addItem(new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Minimum));
@@ -131,25 +82,8 @@ namespace calc {
             saveButton = new QPushButton("保存结果");
             saveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             saveButton->setEnabled(false);  // 初始状态为不可点击
-            saveButton->setStyleSheet(
-                    "QPushButton {"
-                    "    height: 32px;"
-                    "    width: 120px;"
-                    "    border: 1px solid #BBBBBB;"
-                    "    background-color: #FFFFFF;"
-                    "    border-radius: 8px;"
-                    "    color: #000000;"
-                    "    font-size: 14px;"
-                    "}"
-                    "QPushButton:hover {"
-                    "    background-color: #FEFDFC;"
-                    "}"
-                    "QPushButton:pressed {"
-                    "    background-color: #FEFDFC;"
-                    "    color: #505050;"
-                    "}"
-            );
-            connect(saveButton, &QPushButton::clicked, this, &PageFile::saveFile);
+            saveButton->setStyleSheet(Style::sheet("button_white"));
+            connect(saveButton, &QPushButton::clicked, this, &InterfaceFile::saveFile);
             operationLayout->addWidget(saveButton);
 
 

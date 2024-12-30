@@ -6,11 +6,11 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-class PageSettings : public QWidget {
+class InterfaceSettings : public QWidget {
 Q_OBJECT
 
 public:
-    PageSettings(QWidget *parent = nullptr) : QWidget(parent) {
+    InterfaceSettings(QWidget *parent = nullptr) : QWidget(parent) {
         QLabel *label = new QLabel(" ", this);
         label->setAlignment(Qt::AlignCenter);
 

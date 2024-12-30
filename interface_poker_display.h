@@ -9,6 +9,7 @@
 #include <QPixmap>
 
 #include "poker.h"
+#include "style.h"
 
 namespace calc {
 
@@ -31,26 +32,9 @@ namespace calc {
             imageLabel->setPixmap(QPixmap("img/poker_empty.png").scaled(120, 120, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
             lineEdit = new QLineEdit(this);
+            lineEdit->setStyleSheet(Style::sheet("edit_box"));
             lineEdit->setFixedSize(42, 28);
             lineEdit->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            lineEdit->setStyleSheet(
-                    "QLineEdit {"
-                    "    border: 1px solid #BBBBBB;"
-                    "    border-radius: 8px;"
-                    "    background-color: #FFFFFF;"
-                    "    padding: 0 8px;"
-                    "    font-size: 12px;"
-                    "    color: black;"
-                    "}"
-                    "QLineEdit:hover {"
-                    "    border: 1px solid #FEFDFC;"
-                    "    background-color: #FEFDFC;"
-                    "}"
-                    "QLineEdit:focus {"
-                    "    border: 1px solid #BBBBBB;"
-                    "    background-color: #FEFDFC;"
-                    "}"
-            );
             lineEdit->setAlignment(Qt::AlignCenter);
 
             QHBoxLayout *hLayout = new QHBoxLayout();

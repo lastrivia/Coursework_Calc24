@@ -7,6 +7,11 @@
 #include <QWidget>
 #include <QStackedWidget>
 #include <QListWidget>
+#include <QTimer>
+#include <QAbstractAnimation>
+#include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
+#include <QSurfaceFormat>
 #include "interface_menu.h"
 #include "interface_basic.h"
 #include "interface_file.h"
@@ -22,6 +27,10 @@ namespace calc {
     public:
         MainWindow(QWidget *parent = nullptr) : QMainWindow(parent) {
 
+            QSurfaceFormat format;
+            format.setSwapInterval(1);
+            QSurfaceFormat::setDefaultFormat(format);
+
             QWidget *centralWidget = new QWidget(this);
             setCentralWidget(centralWidget);
             QHBoxLayout *mainLayout = new QHBoxLayout(centralWidget);
@@ -29,11 +38,24 @@ namespace calc {
             MenuWidget *menuList = new MenuWidget(this);
 
             QStackedWidget *stackedWidget = new QStackedWidget(this);
-            QWidget *pageBasic = new PageBasic;
-            QWidget *pageFile = new PageFile;
-            QWidget *pageTimedGame = new PageTimedGame;
-            QWidget *pageOnlineGame = new PageOnlineGame;
-            QWidget *pageSettings = new PageSettings;
+            QWidget *pageBasic = new InterfaceBasic;
+            QWidget *pageFile = new InterfaceFile;
+            QWidget *pageTimedGame = new InterfaceTimedGame;
+            QWidget *pageOnlineGame = new InterfaceOnlineGame;
+            QWidget *pageSettings = new InterfaceSettings;
+
+            QGraphicsOpacityEffect *effectBasic = new QGraphicsOpacityEffect(pageBasic);
+            effectBasic->setOpacity(1.0);
+            pageBasic->setGraphicsEffect(effectBasic);
+            QGraphicsOpacityEffect *effectFile = new QGraphicsOpacityEffect(pageFile);
+            pageFile->setGraphicsEffect(effectFile);
+            QGraphicsOpacityEffect *effectTimedGame = new QGraphicsOpacityEffect(pageTimedGame);
+            pageTimedGame->setGraphicsEffect(effectTimedGame);
+            QGraphicsOpacityEffect *effectOnlineGame = new QGraphicsOpacityEffect(pageOnlineGame);
+            pageOnlineGame->setGraphicsEffect(effectOnlineGame);
+            QGraphicsOpacityEffect *effectSettings = new QGraphicsOpacityEffect(pageSettings);
+            pageSettings->setGraphicsEffect(effectSettings);
+
             stackedWidget->addWidget(pageBasic);
             stackedWidget->addWidget(pageFile);
             stackedWidget->addWidget(pageTimedGame);
@@ -45,7 +67,28 @@ namespace calc {
             mainLayout->setStretch(0, 1);
             mainLayout->setStretch(1, 3);
 
-            connect(menuList, &QListWidget::currentRowChanged, stackedWidget, &QStackedWidget::setCurrentIndex);
+            connect(menuList, &QListWidget::currentRowChanged, this, [stackedWidget](int index) {
+
+                stackedWidget->setCurrentIndex(index);
+                QWidget *newWidget = stackedWidget->currentWidget();
+                QGraphicsOpacityEffect *newEffect = qobject_cast<QGraphicsOpacityEffect*>(newWidget->graphicsEffect());
+
+                QPropertyAnimation *animationFadeIn = new QPropertyAnimation(newEffect, "opacity");
+                animationFadeIn->setDuration(200);
+                animationFadeIn->setStartValue(0.5);
+                animationFadeIn->setEndValue(1.0);
+                animationFadeIn->start(QAbstractAnimation::DeleteWhenStopped);
+
+                QPropertyAnimation *animationFloatUp = new QPropertyAnimation(newWidget, "geometry");
+                QRect startRect = newWidget->geometry();
+                startRect.moveTop(startRect.top() + 10);
+                animationFloatUp->setDuration(300);
+                animationFloatUp->setStartValue(startRect);
+                animationFloatUp->setEndValue(newWidget->geometry());
+                animationFloatUp->setEasingCurve(QEasingCurve::OutQuad);
+                animationFloatUp->start(QAbstractAnimation::DeleteWhenStopped);
+            });
+
 
             setWindowTitle("24-Point Calculator");
             resize(960, 600);

@@ -11,11 +11,11 @@
 
 
 // a placeholder:
-class PageTimedGame : public QWidget {
+class InterfaceTimedGame : public QWidget {
 Q_OBJECT
 
 public:
-    PageTimedGame(QWidget *parent = nullptr) : QWidget(parent) {
+    InterfaceTimedGame(QWidget *parent = nullptr) : QWidget(parent) {
         QLabel *label = new QLabel("This module still has bugs, and is removed in current release version.", this);
         label->setAlignment(Qt::AlignCenter);
 

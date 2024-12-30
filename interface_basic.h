@@ -10,16 +10,17 @@
 #include <cstdlib>
 #include "interface_poker_display.h"
 #include "solver.h"
+#include "style.h"
 
 namespace calc {
-    class PageBasic : public QWidget {
+    class InterfaceBasic : public QWidget {
     Q_OBJECT
 
         PokerDisplayWidget *pokers[4];
         QLineEdit *resultLineEdit;
 
     public:
-        PageBasic(QWidget *parent = nullptr) : QWidget(parent) {
+        InterfaceBasic(QWidget *parent = nullptr) : QWidget(parent) {
 
             QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
@@ -34,69 +35,17 @@ namespace calc {
             QHBoxLayout *buttonLayout = new QHBoxLayout();
 
             QPushButton *randomButton = new QPushButton("随机取数", this);
-            randomButton->setStyleSheet(
-                    "QPushButton {"
-                    "    height: 32px;"
-                    "    width: 120px;"
-                    "    border: 1px solid #BBBBBB;"
-                    "    background-color: #FFFFFF;"
-                    "    border-radius: 8px;"
-                    "    color: #000000;"
-                    "    font-size: 14px;"
-                    "}"
-                    "QPushButton:hover {"
-                    "    background-color: #FEFDFC;"
-                    "}"
-                    "QPushButton:pressed {"
-                    "    background-color: #FEFDFC;"
-                    "    color: #505050;"
-                    "}"
-            );
-            connect(randomButton, &QPushButton::clicked, this, &PageBasic::randomNumbers);
+            randomButton->setStyleSheet(Style::sheet("button_white"));
+            connect(randomButton, &QPushButton::clicked, this, &InterfaceBasic::randomNumbers);
             buttonLayout->addWidget(randomButton);
 
             QPushButton *solveButton = new QPushButton("求解", this);
-            solveButton->setStyleSheet(
-                    "QPushButton {"
-                    "    height: 32px;"
-                    "    width: 120px;"
-                    "    border: none;"
-                    "    background-color: #0067C0;"
-                    "    border-radius: 8px;"
-                    "    color: #FFFFFF;"
-                    "    font-size: 14px;"
-                    "}"
-                    "QPushButton:hover {"
-                    "    background-color: #1975C4;"
-                    "}"
-                    "QPushButton:pressed {"
-                    "    background-color: #1975C4;"
-                    "    color: #DDDDDD;"
-                    "}"
-            );
-            connect(solveButton, &QPushButton::clicked, this, &PageBasic::solveProblem);
+            solveButton->setStyleSheet(Style::sheet("button_blue"));
+            connect(solveButton, &QPushButton::clicked, this, &InterfaceBasic::solveProblem);
             buttonLayout->addWidget(solveButton);
 
             resultLineEdit = new QLineEdit(this);
-            resultLineEdit->setStyleSheet(
-                    "QLineEdit {"
-                    "    height: 28px;"
-                    "    border: 1px solid #BBBBBB;"
-                    "    border-radius: 8px;"
-                    "    background-color: #FFFFFF;"
-                    "    padding: 0 8px;"
-                    "    font-size: 12px;"
-                    "    color: black;"
-                    "}"
-                    "QLineEdit:hover {"
-                    "    border: 1px solid #FEFDFC;"
-                    "    background-color: #FEFDFC;"
-                    "}"
-                    "QLineEdit:focus {"
-                    "    border: 1px solid #BBBBBB;"
-                    "    background-color: #FEFDFC;"
-                    "}"
-            );
+            resultLineEdit->setStyleSheet(Style::sheet("edit_box"));
             resultLineEdit->setReadOnly(true);
             buttonLayout->addWidget(resultLineEdit);
 
