@@ -1,5 +1,5 @@
 #include <QApplication>
-#include "interface.h"
+#include "interface/interface.h"
 
 int main(int argc, char *argv[]) {
 

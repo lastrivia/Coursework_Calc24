@@ -1,5 +1,5 @@
-#ifndef CALC_INTERFACE_FILE_H
-#define CALC_INTERFACE_FILE_H
+#ifndef CALC_FILE_CALCULATOR_H
+#define CALC_FILE_CALCULATOR_H
 
 #include <QWidget>
 #include <QPushButton>
@@ -17,13 +17,13 @@
 #include <filesystem>
 #include <QProcess>
 
-#include "solver.h"
-#include "poker.h"
+#include "../algorithm/solver.h"
+#include "../algorithm/poker.h"
 #include "style.h"
 
 namespace calc {
 
-    class InterfaceFile : public QWidget {
+    class InterfaceFileCalculator : public QWidget {
     Q_OBJECT
 
     private:
@@ -36,7 +36,7 @@ namespace calc {
         std::vector<std::string> file_result_strings; // TODO unused yet
 
     public:
-        InterfaceFile(QWidget *parent = nullptr) : QWidget(parent) {
+        InterfaceFileCalculator(QWidget *parent = nullptr) : QWidget(parent) {
 
             Style::sheet("button_white");
 
@@ -60,7 +60,7 @@ namespace calc {
             QFont font;
             font.setPointSize(11);
             openFileButton->setFont(font);
-            connect(openFileButton, &QPushButton::clicked, this, &InterfaceFile::openFile);
+            connect(openFileButton, &QPushButton::clicked, this, &InterfaceFileCalculator::openFile);
             fileLayout->addWidget(openFileButton);
 
 
@@ -69,7 +69,7 @@ namespace calc {
             calculateButton = new QPushButton("执行运算");
             calculateButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             calculateButton->setStyleSheet(Style::sheet("button_blue"));
-            connect(calculateButton, &QPushButton::clicked, this, &InterfaceFile::performCalculation);
+            connect(calculateButton, &QPushButton::clicked, this, &InterfaceFileCalculator::performCalculation);
             operationLayout->addWidget(calculateButton);
 
             operationLayout->addItem(new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Minimum));
@@ -83,7 +83,7 @@ namespace calc {
             saveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             saveButton->setEnabled(false);  // 初始状态为不可点击
             saveButton->setStyleSheet(Style::sheet("button_white"));
-            connect(saveButton, &QPushButton::clicked, this, &InterfaceFile::saveFile);
+            connect(saveButton, &QPushButton::clicked, this, &InterfaceFileCalculator::saveFile);
             operationLayout->addWidget(saveButton);
 
 

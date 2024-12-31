@@ -1,5 +1,5 @@
-#ifndef CALC_INTERFACE_SETTINGS_H
-#define CALC_INTERFACE_SETTINGS_H
+#ifndef CALC_SETTINGS_H
+#define CALC_SETTINGS_H
 
 #include <QApplication>
 #include <QWidget>

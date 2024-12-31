@@ -1,5 +1,5 @@
-#ifndef CALC_INTERFACE_MENU_H
-#define CALC_INTERFACE_MENU_H
+#ifndef CALC_MENU_H
+#define CALC_MENU_H
 
 #include <QListWidget>
 

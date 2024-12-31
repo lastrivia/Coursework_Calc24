@@ -1,5 +1,5 @@
-#ifndef CALC_INTERFACE_POKER_DISPLAY_H
-#define CALC_INTERFACE_POKER_DISPLAY_H
+#ifndef CALC_POKER_DISPLAY_H
+#define CALC_POKER_DISPLAY_H
 
 #include <QApplication>
 #include <QWidget>
@@ -8,7 +8,7 @@
 #include <QLineEdit>
 #include <QPixmap>
 
-#include "poker.h"
+#include "../algorithm/poker.h"
 #include "style.h"
 
 namespace calc {

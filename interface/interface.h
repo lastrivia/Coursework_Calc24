@@ -12,12 +12,13 @@
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
 #include <QSurfaceFormat>
-#include "interface_menu.h"
-#include "interface_basic.h"
-#include "interface_file.h"
-#include "interface_timed_game.h"
-#include "interface_online_game.h"
-#include "interface_settings.h"
+
+#include "menu.h"
+#include "calculator.h"
+#include "file_calculator.h"
+#include "timed_game.h"
+#include "online_game.h"
+#include "settings.h"
 
 #ifndef APP_VERSION     // defined in CMakeLists
 #define APP_VERSION ""
@@ -44,14 +45,13 @@ namespace calc {
             MenuWidget *menuList = new MenuWidget(this);
 
             QStackedWidget *stackedWidget = new QStackedWidget(this);
-            QWidget *pageBasic = new InterfaceBasic;
-            QWidget *pageFile = new InterfaceFile;
+            QWidget *pageBasic = new InterfaceCalculator;
+            QWidget *pageFile = new InterfaceFileCalculator;
             QWidget *pageTimedGame = new InterfaceTimedGame;
             QWidget *pageOnlineGame = new InterfaceOnlineGame;
             QWidget *pageSettings = new InterfaceSettings;
 
             QGraphicsOpacityEffect *effectBasic = new QGraphicsOpacityEffect(pageBasic);
-            effectBasic->setOpacity(1.0);
             pageBasic->setGraphicsEffect(effectBasic);
             QGraphicsOpacityEffect *effectFile = new QGraphicsOpacityEffect(pageFile);
             pageFile->setGraphicsEffect(effectFile);
@@ -61,6 +61,7 @@ namespace calc {
             pageOnlineGame->setGraphicsEffect(effectOnlineGame);
             QGraphicsOpacityEffect *effectSettings = new QGraphicsOpacityEffect(pageSettings);
             pageSettings->setGraphicsEffect(effectSettings);
+            effectBasic->setOpacity(1.0);
 
             stackedWidget->addWidget(pageBasic);
             stackedWidget->addWidget(pageFile);

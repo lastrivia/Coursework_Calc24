@@ -1,5 +1,5 @@
-#ifndef CALC_INTERFACE_BASIC_H
-#define CALC_INTERFACE_BASIC_H
+#ifndef CALC_CALCULATOR_H
+#define CALC_CALCULATOR_H
 
 #include <QApplication>
 #include <QWidget>
@@ -8,19 +8,19 @@
 #include <QPushButton>
 
 #include <cstdlib>
-#include "interface_poker_display.h"
-#include "solver.h"
+#include "../algorithm/solver.h"
+#include "poker_display.h"
 #include "style.h"
 
 namespace calc {
-    class InterfaceBasic : public QWidget {
+    class InterfaceCalculator : public QWidget {
     Q_OBJECT
 
         PokerDisplayWidget *pokers[4];
         QLineEdit *resultLineEdit;
 
     public:
-        InterfaceBasic(QWidget *parent = nullptr) : QWidget(parent) {
+        InterfaceCalculator(QWidget *parent = nullptr) : QWidget(parent) {
 
             QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
@@ -36,12 +36,12 @@ namespace calc {
 
             QPushButton *randomButton = new QPushButton("随机取数", this);
             randomButton->setStyleSheet(Style::sheet("button_white"));
-            connect(randomButton, &QPushButton::clicked, this, &InterfaceBasic::randomNumbers);
+            connect(randomButton, &QPushButton::clicked, this, &InterfaceCalculator::randomNumbers);
             buttonLayout->addWidget(randomButton);
 
             QPushButton *solveButton = new QPushButton("求解", this);
             solveButton->setStyleSheet(Style::sheet("button_blue"));
-            connect(solveButton, &QPushButton::clicked, this, &InterfaceBasic::solveProblem);
+            connect(solveButton, &QPushButton::clicked, this, &InterfaceCalculator::solveProblem);
             buttonLayout->addWidget(solveButton);
 
             resultLineEdit = new QLineEdit(this);

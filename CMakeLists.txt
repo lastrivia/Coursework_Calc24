@@ -30,24 +30,24 @@ find_package(Qt6 COMPONENTS
 add_executable(Calc WIN32
         "${CMAKE_BINARY_DIR}/version.rc"
         main.cpp
-        rational.h
-        rational.cpp
-        operation.h
-        expression.h
-        expression.cpp
-        solver.h
-        solver.cpp
-        interface.h
-        interface_menu.h
-        interface_settings.h
-        interface_file.h
-        interface_online_game.h
-        interface_timed_game.h
-        interface_poker_display.h
-        interface_basic.h
-        poker.h
-        poker.cpp
-        style.h
+        algorithm/rational.h
+        algorithm/rational.cpp
+        algorithm/operation.h
+        algorithm/expression.h
+        algorithm/expression.cpp
+        algorithm/solver.h
+        algorithm/solver.cpp
+        interface/interface.h
+        interface/menu.h
+        interface/settings.h
+        interface/file_calculator.h
+        interface/online_game.h
+        interface/timed_game.h
+        interface/poker_display.h
+        interface/calculator.h
+        algorithm/poker.h
+        algorithm/poker.cpp
+        interface/style.h
 )
 
 target_link_libraries(Calc

@@ -1,5 +1,5 @@
-#ifndef CALC_INTERFACE_ONLINE_GAME_H
-#define CALC_INTERFACE_ONLINE_GAME_H
+#ifndef CALC_ONLINE_GAME_H
+#define CALC_ONLINE_GAME_H
 
 #include <QApplication>
 #include <QWidget>
