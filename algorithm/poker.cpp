@@ -18,7 +18,7 @@ namespace calc {
             if (num >= 1 && num <= 10) {
                 return num;
             }
-        } catch (const std::invalid_argument&) {
+        } catch (const std::invalid_argument &) {
             return -1;
         }
 
@@ -26,17 +26,13 @@ namespace calc {
     }
 
     std::string int_to_poker(int n) {
-        if (n >= 1 && n <= 10) {
-            return std::to_string(n);
-        } else if (n == 11) {
-            return "J";
-        } else if (n == 12) {
-            return "Q";
-        } else if (n == 13) {
-            return "K";
-        }
+        static constexpr std::string poker_str[] = {
+                "", "1", "2", "3", "4", "5", "6",
+                "7", "8", "9", "10", "J", "Q", "K"
+        };
+        if (n >= 1 && n <= 13)
+            return poker_str[n];
 
-        // 非法整数，返回空字符串
         return "";
     }
 }

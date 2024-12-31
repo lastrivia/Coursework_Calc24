@@ -39,36 +39,81 @@ namespace calc {
             }
         }
 
-        T value() const;
+        T value() const {
+            switch (node_type) {
 
-        friend std::ostream &operator<<(std::ostream &out, const expression<T> &exp) {
-            switch (exp.node_type) {
                 case operator_node:
-                    if (exp.sub_left->node_type == operator_node &&
-                        operation_priority[exp.operation] > operation_priority[exp.sub_left->operation])
-                        out << '(' << *exp.sub_left << ')';
-                    else
-                        out << *exp.sub_left;
+                    switch (operation) {
+                        case operator_add:
+                            return sub_left->value() + sub_right->value();
+                        case operator_sub:
+                            return sub_left->value() - sub_right->value();
+                        case operator_mul:
+                            return sub_left->value() * sub_right->value();
+                        case operator_div:
+                            return sub_left->value() / sub_right->value();
+                    }
 
-                    out << operator_char[exp.operation];
+                case operand_node:
+                    return operand;
+            }
+            return T();
+        }
 
-                    if (exp.sub_right->node_type == operator_node &&
-                        operation_priority[exp.operation] >= operation_priority[exp.sub_right->operation])
-                        out << '(' << *exp.sub_right << ')';
+        void print(std::ostream &out, bool reversed = false) const {
+            switch (node_type) {
+                case operator_node:
+                    if (sub_left->node_type == operator_node) {
+                        if (operation_priority[operation] > operation_priority[sub_left->operation]) {
+
+                            out << '(';
+                            sub_left->print(out);
+                            out << ')';
+                        }
+                        else if (operation_priority[operation] == operation_priority[sub_left->operation])
+                            sub_left->print(out, reversed);
+                        else
+                            sub_left->print(out);
+                    }
                     else
-                        out << *exp.sub_right;
+                        sub_left->print(out);
+
+                    if (reversed)
+                        out << operator_char[reversed_operation[operation]];
+                    else
+                        out << operator_char[operation];
+
+                    if (sub_right->node_type == operator_node) {
+                        if (operation_priority[operation] > operation_priority[sub_right->operation]) {
+
+                            out << '(';
+                            sub_right->print(out);
+                            out << ')';
+                        }
+                        else if (operation_priority[operation] == operation_priority[sub_right->operation])
+                            sub_right->print(out, reversed ^ (!is_commutative[operation]));
+                        else
+                            sub_right->print(out);
+                    }
+                    else
+                        sub_right->print(out);
+
                     break;
 
                 case operand_node:
-                    out << exp.operand;
+                    out << operand;
                     break;
             }
+        }
+
+        friend std::ostream &operator<<(std::ostream &out, const expression<T> &exp) {
+            exp.print(out);
             return out;
         }
 
         operator std::string() const { // NOLINT
             std::stringstream ss;
-            ss << *this;
+            print(ss);
             return ss.str();
         }
 

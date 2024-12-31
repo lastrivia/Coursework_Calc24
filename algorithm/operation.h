@@ -26,6 +26,10 @@ namespace calc {
             true, false, true, false
     };
 
+    static constexpr operator_type reversed_operation[] = {
+            operator_sub, operator_add, operator_div, operator_mul
+    };
+
     static constexpr int operation_priority[] = {
             0, 0, 1, 1
     };
