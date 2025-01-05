@@ -93,6 +93,12 @@ namespace calc {
             return result;
         }
 
+        rational operator-() const {
+            rational result = *this;
+            result.numer = -numer;
+            return result;
+        }
+
         bool operator==(const rational &other) const {
             return numer == other.numer && denom == other.denom;
         }

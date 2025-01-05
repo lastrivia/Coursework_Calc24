@@ -213,23 +213,29 @@ namespace calc {
 
         expression(std::string str) { // NOLINT
             std::stringstream ss(str);
-            std::stack<int> operator_stack;
-            std::stack<expression<T> *> operand_stack;
+            std::stack<int> operator_stack, temp_operator_stack;
+            std::stack<expression<T> *> operand_stack, temp_operand_stack;
 
             T current_operand;
-            expression<T> *expression_left, *expression_right;
+            expression<T> *current_expression, *expression_right;
 
             try {
+                bool next_negative_acceptance_flag = true;
                 while (!ss.eof()) {
+
                     if (ss.peek() == EOF)
                         break;
                     int op = char_operator((char) ss.peek());
+                    if (op == operator_sub && next_negative_acceptance_flag)
+                        op = -1;
+
                     switch (op) {
                         case -1: // operand
                             ss >> current_operand;
                             if (ss.fail())
                                 throw std::invalid_argument(""); // invalid operand format
                             operand_stack.push(new expression<T>(current_operand));
+                            next_negative_acceptance_flag = false;
                             break;
                         case operator_add:
                         case operator_sub:
@@ -239,26 +245,57 @@ namespace calc {
                             while (true) {
                                 if (operator_stack.empty() ||
                                     operator_stack.top() == parenthesis_left ||
-                                    operation_priority[op] >= operation_priority[operator_stack.top()]) {
+                                    operation_priority[op] >=
+                                    operation_priority[operator_stack.top()]) {
 
                                     operator_stack.push(op);
                                     break;
                                 }
                                 if (operand_stack.size() < 2)
                                     throw std::invalid_argument(""); // redundant operators
-                                expression_right = operand_stack.top();
+
+                                /// merge operations
+                                temp_operand_stack.push(operand_stack.top());
                                 operand_stack.pop();
-                                expression_left = operand_stack.top();
+                                temp_operand_stack.push(operand_stack.top());
                                 operand_stack.pop();
-                                operator_type top_op = static_cast<operator_type>(operator_stack.top());
+                                temp_operator_stack.push(operator_stack.top());
                                 operator_stack.pop();
-                                operand_stack.push(new expression<T>(
-                                        expression_left, expression_right, top_op));
+
+                                while (!operator_stack.empty() &&
+                                       operator_stack.top() != parenthesis_left &&
+                                       operation_priority[temp_operator_stack.top()] ==
+                                       operation_priority[operator_stack.top()]) {
+
+                                    if (operand_stack.empty())
+                                        throw std::invalid_argument(""); // redundant operators
+
+                                    temp_operand_stack.push(operand_stack.top());
+                                    operand_stack.pop();
+                                    temp_operator_stack.push(operator_stack.top());
+                                    operator_stack.pop();
+                                }
+
+                                current_expression = temp_operand_stack.top();
+                                temp_operand_stack.pop();
+                                while (!temp_operand_stack.empty()) {
+                                    current_expression = new expression<T>(
+                                            current_expression,
+                                            temp_operand_stack.top(),
+                                            static_cast<operator_type>(temp_operator_stack.top())
+                                    );
+                                    temp_operand_stack.pop();
+                                    temp_operator_stack.pop();
+                                }
+
+                                operand_stack.push(current_expression);
                             }
+                            next_negative_acceptance_flag = false;
                             break;
                         case parenthesis_left:
                             ss.ignore();
                             operator_stack.push(op);
+                            next_negative_acceptance_flag = true;
                             break;
                         case parenthesis_right:
                             ss.ignore();
@@ -271,15 +308,44 @@ namespace calc {
                                 }
                                 if (operand_stack.size() < 2)
                                     throw std::invalid_argument(""); // redundant operators
-                                expression_right = operand_stack.top();
+
+                                /// merge operations
+                                temp_operand_stack.push(operand_stack.top());
                                 operand_stack.pop();
-                                expression_left = operand_stack.top();
+                                temp_operand_stack.push(operand_stack.top());
                                 operand_stack.pop();
-                                operator_type top_op = static_cast<operator_type>(operator_stack.top());
+                                temp_operator_stack.push(operator_stack.top());
                                 operator_stack.pop();
-                                operand_stack.push(new expression<T>(
-                                        expression_left, expression_right, top_op));
+
+                                while (!operator_stack.empty() &&
+                                       operator_stack.top() != parenthesis_left &&
+                                       operation_priority[temp_operator_stack.top()] ==
+                                       operation_priority[operator_stack.top()]) {
+
+                                    if (operand_stack.empty())
+                                        throw std::invalid_argument(""); // redundant operators
+
+                                    temp_operand_stack.push(operand_stack.top());
+                                    operand_stack.pop();
+                                    temp_operator_stack.push(operator_stack.top());
+                                    operator_stack.pop();
+                                }
+
+                                current_expression = temp_operand_stack.top();
+                                temp_operand_stack.pop();
+                                while (!temp_operand_stack.empty()) {
+                                    current_expression = new expression<T>(
+                                            current_expression,
+                                            temp_operand_stack.top(),
+                                            static_cast<operator_type>(temp_operator_stack.top())
+                                    );
+                                    temp_operand_stack.pop();
+                                    temp_operator_stack.pop();
+                                }
+
+                                operand_stack.push(current_expression);
                             }
+                            next_negative_acceptance_flag = false;
                             break;
                         default:
                             break;
@@ -290,14 +356,44 @@ namespace calc {
                 while (!operator_stack.empty()) {
                     if (operand_stack.size() < 2)
                         throw std::invalid_argument(""); // redundant operators
-                    expression_right = operand_stack.top();
+                    if (operator_stack.top() == parenthesis_left)
+                        throw std::invalid_argument(""); // parentheses not matched
+
+                    /// merge operations
+                    temp_operand_stack.push(operand_stack.top());
                     operand_stack.pop();
-                    expression_left = operand_stack.top();
+                    temp_operand_stack.push(operand_stack.top());
                     operand_stack.pop();
-                    operator_type top_op = static_cast<operator_type>(operator_stack.top());
+                    temp_operator_stack.push(operator_stack.top());
                     operator_stack.pop();
-                    operand_stack.push(new expression<T>(
-                            expression_left, expression_right, top_op));
+
+                    while (!operator_stack.empty() &&
+                           operator_stack.top() != parenthesis_left &&
+                           operation_priority[temp_operator_stack.top()] ==
+                           operation_priority[operator_stack.top()]) {
+
+                        if (operand_stack.empty())
+                            throw std::invalid_argument(""); // redundant operators
+
+                        temp_operand_stack.push(operand_stack.top());
+                        operand_stack.pop();
+                        temp_operator_stack.push(operator_stack.top());
+                        operator_stack.pop();
+                    }
+
+                    current_expression = temp_operand_stack.top();
+                    temp_operand_stack.pop();
+                    while (!temp_operand_stack.empty()) {
+                        current_expression = new expression<T>(
+                                current_expression,
+                                temp_operand_stack.top(),
+                                static_cast<operator_type>(temp_operator_stack.top())
+                        );
+                        temp_operand_stack.pop();
+                        temp_operator_stack.pop();
+                    }
+
+                    operand_stack.push(current_expression);
                 }
 
                 if (operand_stack.size() > 1)
