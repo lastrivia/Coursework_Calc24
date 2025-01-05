@@ -44,12 +44,15 @@ namespace calc {
             topLayout = new QVBoxLayout();
 
             QHBoxLayout *topLayoutH = new QHBoxLayout;
+            QLabel *iconLabel = new QLabel;
+            iconLabel->setPixmap(QIcon("img/icon_3.png").pixmap(28, 28));
+            topLayoutH->addWidget(iconLabel);
             timerLabel = new QLabel("", this);
-            timerLabel->setStyleSheet("font-size: 16px;");
+            timerLabel->setStyleSheet(Style::sheet("scoreboard"));
             scoreLabel = new QLabel("", this);
-            scoreLabel->setStyleSheet("font-size: 16px;");
+            scoreLabel->setStyleSheet(Style::sheet("scoreboard"));
             highScoreLabel = new QLabel("", this);
-            highScoreLabel->setStyleSheet("font-size: 16px;");
+            highScoreLabel->setStyleSheet(Style::sheet("scoreboard"));
             updateTimeLabel();
             updateScoreLabel();
             topLayoutH->addWidget(timerLabel);
@@ -77,6 +80,7 @@ namespace calc {
                 bottomLayoutOnStart->addItem(new QSpacerItem(0, 10, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
                 scoreResultLabel = new QLabel(" ", this);
+                scoreResultLabel->setStyleSheet("font-size: 14px;");
                 bottomLayoutOnStart->addWidget(scoreResultLabel, 0, Qt::AlignCenter);
 
                 bottomLayoutOnStart->addItem(new QSpacerItem(0, 10, QSizePolicy::Minimum, QSizePolicy::Fixed));
@@ -147,6 +151,7 @@ namespace calc {
             currentScore = 0;
             timeLeft = 10;
             timer->start();
+            updateTimeLabel();
             updateScoreLabel();
             refreshProblem();
             bottomLayout->setCurrentIndex(1);
@@ -155,12 +160,28 @@ namespace calc {
         void updateTime() {
             timeLeft--;
             updateTimeLabel();
-            if (timeLeft == 0)
+            if (timeLeft == 5) {
+                QPalette palette = timerLabel->palette();
+                palette.setColor(QPalette::WindowText, Qt::red);
+                timerLabel->setPalette(palette);
+            }
+            if (timeLeft == 0) {
+                QPalette palette = timerLabel->palette();
+                palette.setColor(QPalette::WindowText, Qt::black);
+                timerLabel->setPalette(palette);
                 endGame();
+            }
         }
 
         void endGame() {
             timer->stop();
+            if (currentScore > highScore) {
+                highScore = currentScore;
+                scoreResultLabel->setText(QString("新纪录!  分数: %1").arg(currentScore));
+            }
+            else
+                scoreResultLabel->setText(QString("游戏结束  分数: %1").arg(currentScore));
+            updateScoreLabel();
             bottomLayout->setCurrentIndex(0);
         }
 
@@ -168,9 +189,6 @@ namespace calc {
             if (true) {  // NOLINT TODO
                 currentScore++;
                 refreshProblem();
-            }
-            if (currentScore > highScore) {
-                highScore = currentScore;
             }
             updateScoreLabel();
         }
@@ -188,8 +206,8 @@ namespace calc {
         }
 
         void updateScoreLabel() {
-            scoreLabel->setText(QString::number(currentScore));
-            highScoreLabel->setText("HI " + QString::number(highScore));
+            scoreLabel->setText(QString("%1").arg(currentScore, 6, 10, QChar('0')));
+            highScoreLabel->setText(QString("HI %1").arg(highScore, 6, 10, QChar('0')));
         }
 
         void refreshProblem() {

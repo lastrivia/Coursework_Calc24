@@ -43,7 +43,7 @@ namespace calc {
             QHBoxLayout *fileLayout = new QHBoxLayout;
 
             QLabel *iconLabel = new QLabel;
-            iconLabel->setPixmap(QIcon("img/icon_2.png").pixmap(32, 32)); // 替换为实际图标路径
+            iconLabel->setPixmap(QIcon("img/icon_2.png").pixmap(32, 32));
             fileLayout->addWidget(iconLabel);
 
             fileLayout->addItem(new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Minimum));
