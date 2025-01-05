@@ -10,12 +10,16 @@ namespace calc {
         operator_add, operator_sub, operator_mul, operator_div
     };
 
+    enum parenthesis_type {
+        parenthesis_left = 4, parenthesis_right = 5
+    };
+
     static constexpr std::array<operator_type, 4> operator_types = {
             operator_add, operator_sub, operator_mul, operator_div
     };
 
     static constexpr char operator_char[] = {
-            '+', '-', '*', '/'
+            '+', '-', '*', '/', '(', ')'
     };
 
     static constexpr std::string operator_wchar[] = {
@@ -48,6 +52,8 @@ namespace calc {
         }
         return T();
     }
+
+    int char_operator(char c);
 }
 
 #endif

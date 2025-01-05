@@ -12,6 +12,9 @@
 #include <QPixmap>
 #include <QStackedLayout>
 
+#include "../algorithm/expression.h"
+#include "../algorithm/solver.h"
+
 namespace calc {
 
     class InterfaceTimedGame : public QWidget {
@@ -32,9 +35,11 @@ namespace calc {
         PokerDisplayWidget *pokers[4];
         std::vector<rational> operands;
 
+        static constexpr int timeLimit = 60;
+
     public:
         InterfaceTimedGame(QWidget *parent = nullptr)
-                : QWidget(parent), currentScore(0), highScore(0), timeLeft(10) {
+                : QWidget(parent), currentScore(0), highScore(0), timeLeft(timeLimit) {
 
             timer = new QTimer(this);
             timer->setInterval(1000);
@@ -149,7 +154,7 @@ namespace calc {
 
         void startGame() {
             currentScore = 0;
-            timeLeft = 10;
+            timeLeft = timeLimit;
             timer->start();
             updateTimeLabel();
             updateScoreLabel();
@@ -186,8 +191,34 @@ namespace calc {
         }
 
         void submitAnswer() {
-            if (true) {  // NOLINT TODO
-                currentScore++;
+            std::string str = answerInput->text().toStdString();
+            expression<rational> expr(((expression<int>) (str)));
+            /** expression<rational> cannot be converted directly from strings (rational doesn't provide istream >> operator),
+                expression<int>::value() will lose remainder in division */
+
+            bool correct_flag = false;
+
+            if (!expr.bad()) {
+                std::vector<rational> answer_operands = expr.extract_operands();
+                std::vector<rational> problem_operands = operands;
+                if (answer_operands.size() == 4) {
+                    bool operand_same_flag = true;
+                    std::sort(problem_operands.begin(), problem_operands.end());
+                    std::sort(answer_operands.begin(), answer_operands.end());
+                    for (int i = 0; i < 4; ++i) {
+                        if (answer_operands[i] != problem_operands[i]) {
+                            operand_same_flag = false;
+                            break;
+                        }
+                    }
+                    if (operand_same_flag)
+                        if (expr.value() == (rational) 24)
+                            correct_flag = true; // operands are the same && value == 24
+                }
+            }
+
+            if (correct_flag) {  // NOLINT TODO
+                currentScore += 1;
                 refreshProblem();
             }
             updateScoreLabel();
@@ -214,6 +245,7 @@ namespace calc {
             operands = randomized_integers(4, 1, 13, 24);
             for (int i = 0; i < 4; ++i)
                 pokers[i]->setValue((int) operands[i]);
+            answerInput->setText("");
         }
     };
 

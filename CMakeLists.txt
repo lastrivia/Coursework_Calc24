@@ -33,6 +33,7 @@ add_executable(Calc WIN32
         algorithm/rational.h
         algorithm/rational.cpp
         algorithm/operation.h
+        algorithm/operation.cpp
         algorithm/expression.h
         algorithm/solver.h
         algorithm/solver.cpp
