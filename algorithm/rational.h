@@ -33,7 +33,7 @@ namespace calc {
             reduce();
         }
 
-        explicit operator int() const { return numer / denom; }
+        operator int() const { return numer / denom; } // NOLINT
 
         explicit operator double() const { return (double) numer / (double) denom; }
 
@@ -95,6 +95,22 @@ namespace calc {
 
         bool operator==(const rational &other) const {
             return numer == other.numer && denom == other.denom;
+        }
+
+        bool operator<(const rational &other) const {
+            return (long long) (numer) * other.denom < (long long) (denom) * other.numer;
+        }
+
+        bool operator<=(const rational &other) const {
+            return (long long) (numer) * other.denom <= (long long) (denom) * other.numer;
+        }
+
+        bool operator>(const rational &other) const {
+            return (long long) (numer) * other.denom > (long long) (denom) * other.numer;
+        }
+
+        bool operator>=(const rational &other) const {
+            return (long long) (numer) * other.denom >= (long long) (denom) * other.numer;
         }
 
         friend std::ostream &operator<<(std::ostream &out, const rational &r) {

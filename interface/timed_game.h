@@ -30,6 +30,7 @@ namespace calc {
         QStackedLayout *bottomLayout;
 
         PokerDisplayWidget *pokers[4];
+        std::vector<rational> operands;
 
     public:
         InterfaceTimedGame(QWidget *parent = nullptr)
@@ -112,7 +113,7 @@ namespace calc {
                 refreshButton = new QPushButton("刷新题目", this);
                 refreshButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
                 refreshButton->setStyleSheet(Style::sheet("button_white"));
-                connect(refreshButton, &QPushButton::clicked, this, &InterfaceTimedGame::refreshProblem);
+                connect(refreshButton, &QPushButton::clicked, this, &InterfaceTimedGame::refreshProblemClick);
 
                 submitButton = new QPushButton("提交答案", this);
                 submitButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -147,6 +148,7 @@ namespace calc {
             timeLeft = 10;
             timer->start();
             updateScoreLabel();
+            refreshProblem();
             bottomLayout->setCurrentIndex(1);
         }
 
@@ -163,15 +165,18 @@ namespace calc {
         }
 
         void submitAnswer() {
-            currentScore++;
+            if (true) {  // NOLINT TODO
+                currentScore++;
+                refreshProblem();
+            }
             if (currentScore > highScore) {
                 highScore = currentScore;
             }
             updateScoreLabel();
         }
 
-        void refreshProblem() {
-
+        void refreshProblemClick() {
+            refreshProblem();
         }
 
     private:
@@ -185,6 +190,12 @@ namespace calc {
         void updateScoreLabel() {
             scoreLabel->setText(QString::number(currentScore));
             highScoreLabel->setText("HI " + QString::number(highScore));
+        }
+
+        void refreshProblem() {
+            operands = randomized_integers(4, 1, 13, 24);
+            for (int i = 0; i < 4; ++i)
+                pokers[i]->setValue((int) operands[i]);
         }
     };
 

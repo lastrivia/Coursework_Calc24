@@ -36,16 +36,18 @@ add_executable(Calc WIN32
         algorithm/expression.h
         algorithm/solver.h
         algorithm/solver.cpp
-        interface/interface.h
-        interface/menu.h
-        interface/settings.h
-        interface/file_calculator.h
-        interface/online_game.h
-        interface/timed_game.h
-        interface/poker_display.h
-        interface/calculator.h
         algorithm/poker.h
         algorithm/poker.cpp
+        algorithm/random.h
+        algorithm/random.cpp
+        interface/interface.h
+        interface/menu.h
+        interface/calculator.h
+        interface/file_calculator.h
+        interface/timed_game.h
+        interface/online_game.h
+        interface/settings.h
+        interface/poker_display.h
         interface/style.h
 )
 

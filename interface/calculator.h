@@ -9,6 +9,7 @@
 
 #include <cstdlib>
 #include "../algorithm/solver.h"
+#include "../algorithm/random.h"
 #include "poker_display.h"
 #include "style.h"
 
@@ -58,17 +59,16 @@ namespace calc {
     private slots:
 
         void randomNumbers() {
-            srand(time(nullptr));
-            for (auto &poker: pokers) {
-                poker->setValue(rand() % 13 + 1);
-            }
+            std::vector<rational> v = randomized_integers(4, 1, 13);
+            for (int i = 0; i < 4; ++i)
+                pokers[i]->setValue((int) v[i]);
         }
 
         void solveProblem() {
             solver solver_instance(4, 24);
             std::vector<rational> input_operand(4);
             for (int i = 0; i < 4; ++i) {
-                if(pokers[i]->getValue() >= 1 && pokers[i]->getValue() <= 13)
+                if (pokers[i]->getValue() >= 1 && pokers[i]->getValue() <= 13)
                     input_operand[i] = pokers[i]->getValue();
                 else {
                     resultLineEdit->setText("请输入 4 个 1~10 的数字或 J/Q/K");
@@ -80,7 +80,7 @@ namespace calc {
             bool result;
             solver_instance.set_operands(input_operand);
             result = solver_instance.solve(answer);
-            if(result)
+            if (result)
                 resultLineEdit->setText(answer.c_str());
             else
                 resultLineEdit->setText("无解");
