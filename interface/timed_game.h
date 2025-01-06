@@ -24,7 +24,7 @@ namespace calc {
         int timeLeft;
         int correctCount, abandonCount;
 
-        QTimer *timer;
+        QTimer *gameTimer, *blinkTimer;
         QLabel *timerIconLabel, *timerLabel, *scoreLabel, *highScoreLabel;
         QLineEdit *answerInput;
         QLabel *answerCheckIcon;
@@ -36,7 +36,7 @@ namespace calc {
         PokerDisplayWidget *pokers[4];
         std::vector<rational> operands;
 
-        static constexpr int timeLimit = 10, timeWarningLimit = 5;
+        static constexpr int timeLimit = 120, timeWarningLimit = 20;
         static constexpr int correctReward = 100, correctCountReward = 20,
                 incorrectPunishment = 10, abandonPunishment = 10, abandonCountPunishment = 10;
 
@@ -44,9 +44,13 @@ namespace calc {
         InterfaceTimedGame(QWidget *parent = nullptr)
                 : QWidget(parent), currentScore(0), highScore(0), timeLeft(0) {
 
-            timer = new QTimer(this);
-            timer->setInterval(1000);
-            connect(timer, &QTimer::timeout, this, &InterfaceTimedGame::updateTime);
+            gameTimer = new QTimer(this);
+            gameTimer->setInterval(1000);
+            connect(gameTimer, &QTimer::timeout, this, &InterfaceTimedGame::updateTime);
+
+            blinkTimer = new QTimer(this);
+            blinkTimer->setInterval(500);
+            connect(blinkTimer, &QTimer::timeout, this, &InterfaceTimedGame::blinkTime);
 
 
             topLayout = new QVBoxLayout();
@@ -176,25 +180,29 @@ namespace calc {
 
             answerCheckIcon->setPixmap(QIcon("img/icon_answer_waiting.png").pixmap(32, 32));
             bottomLayout->setCurrentIndex(1);
-            timer->start();
+            gameTimer->start();
         }
 
         void updateTime() {
             timeLeft--;
             updateTimeLabel();
-            if (timeLeft == timeWarningLimit) {
-                timerLabel->setStyleSheet(Style::sheet("scoreboard_warning"));
-                timerIconLabel->setStyleSheet(Style::sheet("scoreboard_warning"));
-            }
             if (timeLeft == 0) {
-                timerLabel->setStyleSheet(Style::sheet("scoreboard"));
-                timerIconLabel->setStyleSheet(Style::sheet("scoreboard"));
+                timerLabel->setVisible(true);
                 endGame();
+            }
+            else if (timeLeft <= timeWarningLimit) {
+                timerLabel->setVisible(true);
+                blinkTimer->start();
             }
         }
 
+        void blinkTime() {
+            timerLabel->setVisible(false);
+            blinkTimer->stop();
+        }
+
         void endGame() {
-            timer->stop();
+            gameTimer->stop();
             if (currentScore > highScore) {
                 highScore = currentScore;
                 scoreResultLabel->setText(QString("新纪录!  分数: %1").arg(currentScore));
