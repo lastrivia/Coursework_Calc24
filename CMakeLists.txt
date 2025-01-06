@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.28)
 project(Calc)
 
-set(APP_VERSION "2.0")
-set(APP_VERSION_COMMA "2,0")
+set(APP_VERSION "2.1")
+set(APP_VERSION_COMMA "2,1")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
