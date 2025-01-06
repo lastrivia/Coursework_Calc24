@@ -9,18 +9,20 @@ namespace calc {
 
     int poker_to_int(const std::string &str) {
 
-        if (str == "J")
+        if (str == "A" || str == "a")
+            return 1;
+        if (str == "J" || str == "j")
             return 11;
-        if (str == "Q")
+        if (str == "Q" || str == "q")
             return 12;
-        if (str == "K")
+        if (str == "K" || str == "k")
             return 13;
 
         try {
             int num = std::stoi(str);
             if (num >= 1 && num <= 9 && str.length() == 1)
                 return num;
-            if (num == 10 && str.length() == 2)
+            if (num >= 10 && num <= 13  && str.length() == 2)
                 return num;
         } catch (const std::invalid_argument &) {
             return -1;

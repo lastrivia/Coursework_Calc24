@@ -220,14 +220,16 @@ namespace calc {
             expression<T> *current_expression, *expression_right;
 
             try {
-                if(str.empty())
-                    throw std::invalid_argument("");
 
                 bool next_negative_acceptance_flag = true;
                 while (!ss.eof()) {
 
                     if (ss.peek() == EOF)
                         break;
+                    if (ss.peek() == ' ') {
+                        ss.ignore();
+                        continue;
+                    }
                     int op = char_operator((char) ss.peek());
                     if (op == operator_sub && next_negative_acceptance_flag)
                         op = -1;
@@ -399,8 +401,8 @@ namespace calc {
                     operand_stack.push(current_expression);
                 }
 
-                if (operand_stack.size() > 1)
-                    throw std::invalid_argument(""); // redundant operands
+                if (operand_stack.size() != 1)
+                    throw std::invalid_argument(""); // >1: redundant operands    0: empty expression
 
                 current_expression = operand_stack.top();
                 operand_stack.pop();

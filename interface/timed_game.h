@@ -224,9 +224,8 @@ namespace calc {
 
         void submitAnswer() {
             std::string str = answerInput->text().toStdString();
-            expression<rational> expr(((expression<int>) (str)));
-            /** expression<rational> cannot be converted directly from strings (rational doesn't provide istream >> operator),
-                expression<int>::value() will lose remainder in division */
+            expression<rational> expr(((expression<poker_int>) (str)));
+            // expression<rational> cannot be converted directly from strings (rational doesn't provide istream >> operator)
 
             bool correct_flag = false;
 
