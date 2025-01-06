@@ -214,7 +214,7 @@ namespace calc {
             gameTimer->stop();
             if (currentScore > highScore) {
                 highScore = currentScore;
-                scoreResultLabel->setText(QString("新纪录!  分数: %1").arg(currentScore));
+                scoreResultLabel->setText(QString("新纪录！ 分数: %1").arg(currentScore));
             }
             else
                 scoreResultLabel->setText(QString("游戏结束  分数: %1").arg(currentScore));
@@ -240,33 +240,37 @@ namespace calc {
                     correct_flag = true; // requires: operands are the same && value == 24
 
                 if (correct_flag) {
-                    if (cheatFlag)
-                        scoreChangeLabel->setText(QString("不许作弊哦!  +0"));
+                    if (cheatFlag) {
+                        timeLeft = 0;
+                        currentScore = 0;
+                        endGame();
+                        scoreResultLabel->setText(QString("不许作弊哦！ 游戏结束  分数: 0"));
+                    }
                     else {
                         currentScore += correctReward + correctCount * correctCountReward;
                         if (correctCount == 0)
                             scoreChangeLabel->setText(
-                                    QString("答对了!  +%1").arg(correctReward + correctCount * correctCountReward));
+                                    QString("答对了！ +%1").arg(correctReward + correctCount * correctCountReward));
                         else
-                            scoreChangeLabel->setText(QString("连续答对 %1 题!  +%2").arg(correctCount + 1).arg(
+                            scoreChangeLabel->setText(QString("连续答对 %1 题！ +%2").arg(correctCount + 1).arg(
                                     correctReward + correctCount * correctCountReward));
                         ++correctCount;
                         abandonCount = 0;
+                        answerCheckIcon->setPixmap(QIcon("img/icon_answer_correct.png").pixmap(32, 32));
+                        refreshProblem();
                     }
-                    answerCheckIcon->setPixmap(QIcon("img/icon_answer_correct.png").pixmap(32, 32));
-                    refreshProblem();
                 }
                 else {
                     currentScore -= incorrectPunishment;
                     if (currentScore < 0)
                         currentScore = 0;
-                    scoreChangeLabel->setText(QString("答错了!  -%1").arg(incorrectPunishment));
+                    scoreChangeLabel->setText(QString("答错了！ -%1").arg(incorrectPunishment));
                     correctCount = 0;
                     answerCheckIcon->setPixmap(QIcon("img/icon_answer_incorrect.png").pixmap(32, 32));
                 }
             }
             else {
-                scoreChangeLabel->setText("表达式非法, 请检查输入");
+                scoreChangeLabel->setText("表达式非法，请检查输入");
                 answerCheckIcon->setPixmap(QIcon("img/icon_answer_waiting.png").pixmap(32, 32));
             }
             updateScoreLabel();
