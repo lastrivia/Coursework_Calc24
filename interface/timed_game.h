@@ -25,7 +25,7 @@ namespace calc {
         int correctCount, abandonCount;
 
         QTimer *timer;
-        QLabel *timerLabel, *scoreLabel, *highScoreLabel;
+        QLabel *timerIconLabel, *timerLabel, *scoreLabel, *highScoreLabel;
         QLineEdit *answerInput;
         QLabel *answerCheckIcon;
         QLabel *scoreResultLabel, *scoreChangeLabel;
@@ -36,7 +36,7 @@ namespace calc {
         PokerDisplayWidget *pokers[4];
         std::vector<rational> operands;
 
-        static constexpr int timeLimit = 120, timeWarningLimit = 20;
+        static constexpr int timeLimit = 10, timeWarningLimit = 5;
         static constexpr int correctReward = 100, correctCountReward = 20,
                 incorrectPunishment = 10, abandonPunishment = 10, abandonCountPunishment = 10;
 
@@ -52,9 +52,10 @@ namespace calc {
             topLayout = new QVBoxLayout();
 
             QHBoxLayout *topLayoutH = new QHBoxLayout;
-            QLabel *iconLabel = new QLabel;
-            iconLabel->setPixmap(QIcon("img/icon_3.png").pixmap(28, 28));
-            topLayoutH->addWidget(iconLabel);
+            timerIconLabel = new QLabel;
+            timerIconLabel->setPixmap(QIcon("img/icon_3.png").pixmap(28, 28));
+            timerIconLabel->setStyleSheet(Style::sheet("scoreboard"));
+            topLayoutH->addWidget(timerIconLabel);
             timerLabel = new QLabel("", this);
             timerLabel->setStyleSheet(Style::sheet("scoreboard"));
             scoreLabel = new QLabel("", this);
@@ -116,7 +117,7 @@ namespace calc {
                 connect(answerInput, &QLineEdit::returnPressed, this, &InterfaceTimedGame::submitAnswer);
 
                 answerCheckIcon = new QLabel(this);
-                answerCheckIcon->setPixmap(QPixmap(" "));
+                answerCheckIcon->setPixmap(QIcon("img/icon_answer_waiting.png").pixmap(32, 32));
 
                 QHBoxLayout *answerLayout = new QHBoxLayout();
                 answerLayout->addWidget(answerInput);
@@ -173,6 +174,7 @@ namespace calc {
 
             refreshProblem();
 
+            answerCheckIcon->setPixmap(QIcon("img/icon_answer_waiting.png").pixmap(32, 32));
             bottomLayout->setCurrentIndex(1);
             timer->start();
         }
@@ -181,14 +183,12 @@ namespace calc {
             timeLeft--;
             updateTimeLabel();
             if (timeLeft == timeWarningLimit) {
-                QPalette palette = timerLabel->palette();
-                palette.setColor(QPalette::WindowText, Qt::red);
-                timerLabel->setPalette(palette);
+                timerLabel->setStyleSheet(Style::sheet("scoreboard_warning"));
+                timerIconLabel->setStyleSheet(Style::sheet("scoreboard_warning"));
             }
             if (timeLeft == 0) {
-                QPalette palette = timerLabel->palette();
-                palette.setColor(QPalette::WindowText, Qt::black);
-                timerLabel->setPalette(palette);
+                timerLabel->setStyleSheet(Style::sheet("scoreboard"));
+                timerIconLabel->setStyleSheet(Style::sheet("scoreboard"));
                 endGame();
             }
         }
@@ -233,26 +233,32 @@ namespace calc {
                         if (expr.value() == (rational) 24)
                             correct_flag = true; // requires: operands are the same && value == 24
                 }
-            }
 
-            if (correct_flag) {
-                currentScore += correctReward + correctCount * correctCountReward;
-                if (correctCount == 0)
-                    scoreChangeLabel->setText(
-                            QString("答对了!  +%1").arg(correctReward + correctCount * correctCountReward));
-                else
-                    scoreChangeLabel->setText(QString("连续答对 %1 题!  +%2").arg(correctCount + 1).arg(
-                            correctReward + correctCount * correctCountReward));
-                ++correctCount;
-                abandonCount = 0;
-                refreshProblem();
+                if (correct_flag) {
+                    currentScore += correctReward + correctCount * correctCountReward;
+                    if (correctCount == 0)
+                        scoreChangeLabel->setText(
+                                QString("答对了!  +%1").arg(correctReward + correctCount * correctCountReward));
+                    else
+                        scoreChangeLabel->setText(QString("连续答对 %1 题!  +%2").arg(correctCount + 1).arg(
+                                correctReward + correctCount * correctCountReward));
+                    ++correctCount;
+                    abandonCount = 0;
+                    answerCheckIcon->setPixmap(QIcon("img/icon_answer_correct.png").pixmap(32, 32));
+                    refreshProblem();
+                }
+                else {
+                    currentScore -= incorrectPunishment;
+                    if (currentScore < 0)
+                        currentScore = 0;
+                    scoreChangeLabel->setText(QString("答错了!  -%1").arg(incorrectPunishment));
+                    correctCount = 0;
+                    answerCheckIcon->setPixmap(QIcon("img/icon_answer_incorrect.png").pixmap(32, 32));
+                }
             }
             else {
-                currentScore -= incorrectPunishment;
-                if (currentScore < 0)
-                    currentScore = 0;
-                scoreChangeLabel->setText(QString("答错了!  -%1").arg(incorrectPunishment));
-                correctCount = 0;
+                scoreChangeLabel->setText("表达式非法, 请检查输入");
+                answerCheckIcon->setPixmap(QIcon("img/icon_answer_waiting.png").pixmap(32, 32));
             }
             updateScoreLabel();
         }
@@ -269,6 +275,7 @@ namespace calc {
                         abandonPunishment + abandonCount * abandonCountPunishment));
             ++abandonCount;
             correctCount = 0;
+            answerCheckIcon->setPixmap(QIcon("img/icon_answer_waiting.png").pixmap(32, 32));
             updateScoreLabel();
             refreshProblem();
         }
