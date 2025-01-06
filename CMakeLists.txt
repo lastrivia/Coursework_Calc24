@@ -37,8 +37,8 @@ add_executable(Calc WIN32
         algorithm/expression.h
         algorithm/solver.h
         algorithm/solver.cpp
-        algorithm/poker.h
-        algorithm/poker.cpp
+        algorithm/utils.h
+        algorithm/utils.cpp
         algorithm/random.h
         algorithm/random.cpp
         interface/interface.h

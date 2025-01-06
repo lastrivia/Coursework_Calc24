@@ -233,7 +233,7 @@ namespace calc {
                         op = -1;
 
                     switch (op) {
-                        case -1: // operand
+                        case -1: //
                             ss >> current_operand;
                             if (ss.fail())
                                 throw std::invalid_argument(""); // invalid operand format
@@ -402,8 +402,27 @@ namespace calc {
                 if (operand_stack.size() > 1)
                     throw std::invalid_argument(""); // redundant operands
 
-                *this = *operand_stack.top();
-                delete operand_stack.top();
+                current_expression = operand_stack.top();
+                operand_stack.pop();
+
+                node_type = current_expression->node_type;
+
+                switch (node_type) {
+                    case operand_node:
+                        operand = current_expression->operand;
+                        break;
+                    case operator_node:
+                        operation = current_expression->operation;
+                        sub_left = current_expression->sub_left;
+                        sub_right = current_expression->sub_right;
+                        break;
+                    case bad_node:
+                        break;
+                }
+
+                current_expression->node_type = bad_node;
+                delete current_expression;
+
             }
             catch (std::exception &e) { // invalid input, clear memory and return empty expression
                 while (!operand_stack.empty()) {

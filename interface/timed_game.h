@@ -24,6 +24,8 @@ namespace calc {
         int timeLeft;
         int correctCount, abandonCount;
 
+        bool cheatFlag;
+
         QTimer *gameTimer, *blinkTimer;
         QLabel *timerIconLabel, *timerLabel, *scoreLabel, *highScoreLabel;
         QLineEdit *answerInput;
@@ -231,34 +233,26 @@ namespace calc {
             if (!expr.bad()) {
                 std::vector<rational> answer_operands = expr.extract_operands();
                 std::vector<rational> problem_operands = operands;
-                if (answer_operands.size() == 4) {
-                    bool operand_same_flag = true;
-                    for (auto &i: answer_operands)
-                        if (i < (rational) 0)
-                            i = -i;
-                    std::sort(problem_operands.begin(), problem_operands.end());
-                    std::sort(answer_operands.begin(), answer_operands.end());
-                    for (int i = 0; i < 4; ++i) {
-                        if (answer_operands[i] != problem_operands[i]) {
-                            operand_same_flag = false;
-                            break;
-                        }
-                    }
-                    if (operand_same_flag)
-                        if (expr.value() == (rational) 24)
-                            correct_flag = true; // requires: operands are the same && value == 24
-                }
+                for (auto &i: answer_operands)
+                    if (i < (rational) 0)
+                        i = -i;
+                if (same_elements(answer_operands, problem_operands) && expr.value() == (rational) 24)
+                    correct_flag = true; // requires: operands are the same && value == 24
 
                 if (correct_flag) {
-                    currentScore += correctReward + correctCount * correctCountReward;
-                    if (correctCount == 0)
-                        scoreChangeLabel->setText(
-                                QString("答对了!  +%1").arg(correctReward + correctCount * correctCountReward));
-                    else
-                        scoreChangeLabel->setText(QString("连续答对 %1 题!  +%2").arg(correctCount + 1).arg(
-                                correctReward + correctCount * correctCountReward));
-                    ++correctCount;
-                    abandonCount = 0;
+                    if (cheatFlag)
+                        scoreChangeLabel->setText(QString("不许作弊哦!  +0"));
+                    else {
+                        currentScore += correctReward + correctCount * correctCountReward;
+                        if (correctCount == 0)
+                            scoreChangeLabel->setText(
+                                    QString("答对了!  +%1").arg(correctReward + correctCount * correctCountReward));
+                        else
+                            scoreChangeLabel->setText(QString("连续答对 %1 题!  +%2").arg(correctCount + 1).arg(
+                                    correctReward + correctCount * correctCountReward));
+                        ++correctCount;
+                        abandonCount = 0;
+                    }
                     answerCheckIcon->setPixmap(QIcon("img/icon_answer_correct.png").pixmap(32, 32));
                     refreshProblem();
                 }
@@ -315,6 +309,21 @@ namespace calc {
             for (int i = 0; i < 4; ++i)
                 pokers[i]->setValue((int) operands[i]);
             answerInput->setText("");
+            cheatFlag = false;
+        }
+
+    public:
+
+        bool gameStarted() const {
+            return timeLeft > 0;
+        }
+
+        const std::vector<rational> &getOperands() const {
+            return operands;
+        }
+
+        void setCheatFlag() {
+            cheatFlag = true;
         }
     };
 

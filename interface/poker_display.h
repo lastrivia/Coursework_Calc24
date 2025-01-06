@@ -9,7 +9,7 @@
 #include <QPixmap>
 #include <random>
 
-#include "../algorithm/poker.h"
+#include "../algorithm/utils.h"
 #include "style.h"
 
 namespace calc {

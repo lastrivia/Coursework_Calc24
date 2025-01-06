@@ -18,7 +18,7 @@
 #include <QProcess>
 
 #include "../algorithm/solver.h"
-#include "../algorithm/poker.h"
+#include "../algorithm/utils.h"
 #include "style.h"
 
 namespace calc {

@@ -1,6 +1,9 @@
 #include <string>
 #include <stdexcept>
-#include "poker.h"
+#include <vector>
+#include <algorithm>
+
+#include "utils.h"
 
 namespace calc {
 
@@ -15,9 +18,10 @@ namespace calc {
 
         try {
             int num = std::stoi(str);
-            if (num >= 1 && num <= 10) {
+            if (num >= 1 && num <= 9 && str.length() == 1)
                 return num;
-            }
+            if (num == 10 && str.length() == 2)
+                return num;
         } catch (const std::invalid_argument &) {
             return -1;
         }

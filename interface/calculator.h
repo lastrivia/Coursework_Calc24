@@ -12,6 +12,7 @@
 #include "../algorithm/random.h"
 #include "poker_display.h"
 #include "style.h"
+#include "timed_game.h"
 
 namespace calc {
     class InterfaceCalculator : public QWidget {
@@ -19,6 +20,7 @@ namespace calc {
 
         PokerDisplayWidget *pokers[4];
         QLineEdit *resultLineEdit;
+        InterfaceTimedGame *timedGameWidget;
 
     public:
         InterfaceCalculator(QWidget *parent = nullptr) : QWidget(parent) {
@@ -58,6 +60,8 @@ namespace calc {
             mainLayout->addLayout(buttonLayout);
 
             setLayout(mainLayout);
+
+            timedGameWidget = nullptr;
         }
 
     private slots:
@@ -88,6 +92,19 @@ namespace calc {
                 resultLineEdit->setText(answer.c_str());
             else
                 resultLineEdit->setText("无解");
+
+
+            if(timedGameWidget && timedGameWidget->gameStarted()) {
+                auto game_operands = timedGameWidget->getOperands();
+                if(same_elements(input_operand, game_operands))
+                    timedGameWidget->setCheatFlag();
+            }
+        }
+
+    public:
+
+        void connectTimedGame(InterfaceTimedGame *timedGame) {
+            timedGameWidget = timedGame;
         }
     };
 

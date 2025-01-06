@@ -45,14 +45,16 @@ namespace calc {
             MenuWidget *menuList = new MenuWidget(this);
 
             QStackedWidget *stackedWidget = new QStackedWidget(this);
-            QWidget *pageBasic = new InterfaceCalculator;
-            QWidget *pageFile = new InterfaceFileCalculator;
-            QWidget *pageTimedGame = new InterfaceTimedGame;
-            QWidget *pageOnlineGame = new InterfaceOnlineGame;
-            QWidget *pageSettings = new InterfaceSettings;
+            auto *pageCalculator = new InterfaceCalculator;
+            auto *pageFile = new InterfaceFileCalculator;
+            auto *pageTimedGame = new InterfaceTimedGame;
+            auto *pageOnlineGame = new InterfaceOnlineGame;
+            auto *pageSettings = new InterfaceSettings;
 
-            QGraphicsOpacityEffect *effectBasic = new QGraphicsOpacityEffect(pageBasic);
-            pageBasic->setGraphicsEffect(effectBasic);
+            pageCalculator->connectTimedGame(pageTimedGame);
+
+            QGraphicsOpacityEffect *effectBasic = new QGraphicsOpacityEffect(pageCalculator);
+            pageCalculator->setGraphicsEffect(effectBasic);
             QGraphicsOpacityEffect *effectFile = new QGraphicsOpacityEffect(pageFile);
             pageFile->setGraphicsEffect(effectFile);
             QGraphicsOpacityEffect *effectTimedGame = new QGraphicsOpacityEffect(pageTimedGame);
@@ -63,7 +65,7 @@ namespace calc {
             pageSettings->setGraphicsEffect(effectSettings);
             effectBasic->setOpacity(1.0);
 
-            stackedWidget->addWidget(pageBasic);
+            stackedWidget->addWidget(pageCalculator);
             stackedWidget->addWidget(pageFile);
             stackedWidget->addWidget(pageTimedGame);
             stackedWidget->addWidget(pageOnlineGame);
