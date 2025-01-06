@@ -28,7 +28,7 @@ namespace calc {
 
     private:
         QLineEdit *filePathInput;
-        QLabel *resultLabel;
+        QLabel *resultLabel, *resultIndicatorIcon;
         QPushButton *openFileButton, *calculateButton, *saveButton;
 
         std::vector<std::vector<rational> > file_operands;
@@ -43,7 +43,7 @@ namespace calc {
             QHBoxLayout *fileLayout = new QHBoxLayout;
 
             QLabel *iconLabel = new QLabel;
-            iconLabel->setPixmap(QIcon("img/icon_2.png").pixmap(32, 32));
+            iconLabel->setPixmap(QIcon("img/icon_menu_file.png").pixmap(32, 32));
             fileLayout->addWidget(iconLabel);
 
             fileLayout->addItem(new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Minimum));
@@ -77,12 +77,19 @@ namespace calc {
             resultLabel = new QLabel("等待中...");
             operationLayout->addWidget(resultLabel);
 
-            operationLayout->addItem(new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Minimum));
+            resultIndicatorIcon = new QLabel(this);
+            resultIndicatorIcon->setPixmap(QIcon("").pixmap(20, 20));
+            operationLayout->addWidget(resultIndicatorIcon);
+
+            operationLayout->addItem(new QSpacerItem(10, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
             saveButton = new QPushButton("保存结果");
+            saveButton->setStyleSheet(Style::sheet("button_white"));
+            saveButton->setIcon(QIcon("img/icon_button_save.png"));
+            saveButton->setIconSize(QSize(20, 20));
+            saveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             saveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             saveButton->setEnabled(false);
-            saveButton->setStyleSheet(Style::sheet("button_white"));
             connect(saveButton, &QPushButton::clicked, this, &InterfaceFileCalculator::saveFile);
             operationLayout->addWidget(saveButton);
 
@@ -105,6 +112,7 @@ namespace calc {
         void performCalculation() {
 
             saveButton->setEnabled(false);
+            resultIndicatorIcon->setPixmap(QIcon("").pixmap(20, 20));
             std::string file_path = filePathInput->text().toStdString();
 
             if (std::filesystem::exists(file_path)) {
@@ -138,8 +146,9 @@ namespace calc {
                     }
 
                     std::stringstream ss;
-                    ss << "已完成 " << file_operands.size() << " 组计算，点击导出结果 ->";
+                    ss << "已完成 " << file_operands.size() << " 组计算，点击导出结果";
                     resultLabel->setText(ss.str().c_str());
+                    resultIndicatorIcon->setPixmap(QIcon("img/icon_button_start.png").pixmap(20, 20));
                     saveButton->setEnabled(true);
                 }
                 else resultLabel->setText("错误：文件拒绝访问");

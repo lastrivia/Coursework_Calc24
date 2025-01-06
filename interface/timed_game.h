@@ -57,7 +57,7 @@ namespace calc {
 
             QHBoxLayout *topLayoutH = new QHBoxLayout;
             timerIconLabel = new QLabel;
-            timerIconLabel->setPixmap(QIcon("img/icon_3.png").pixmap(28, 28));
+            timerIconLabel->setPixmap(QIcon("img/icon_menu_clock.png").pixmap(28, 28));
             timerIconLabel->setStyleSheet(Style::sheet("scoreboard"));
             topLayoutH->addWidget(timerIconLabel);
             timerLabel = new QLabel("", this);
@@ -97,8 +97,11 @@ namespace calc {
                 bottomLayoutOnStart->addItem(new QSpacerItem(0, 10, QSizePolicy::Minimum, QSizePolicy::Fixed));
 
                 startButton = new QPushButton("开始游戏", this);
-                startButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
                 startButton->setStyleSheet(Style::sheet("button_blue"));
+                startButton->setFixedWidth(180);
+                startButton->setIcon(QIcon("img/icon_button_start_w.png"));
+                startButton->setIconSize(QSize(20, 20));
+                startButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
                 connect(startButton, &QPushButton::clicked, this, &InterfaceTimedGame::startGame);
                 bottomLayoutOnStart->addWidget(startButton, 0, Qt::AlignCenter);
 
@@ -131,13 +134,17 @@ namespace calc {
                 bottomLayoutInGame->addItem(new QSpacerItem(0, 10, QSizePolicy::Minimum, QSizePolicy::Fixed));
 
                 abandonButton = new QPushButton("放弃题目", this);
-                abandonButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
                 abandonButton->setStyleSheet(Style::sheet("button_white"));
+                abandonButton->setFixedWidth(180);
+                abandonButton->setIcon(QIcon("img/icon_button_refresh.png"));
+                abandonButton->setIconSize(QSize(20, 20));
+                abandonButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
                 connect(abandonButton, &QPushButton::clicked, this, &InterfaceTimedGame::refreshProblemClick);
 
                 submitButton = new QPushButton("提交答案", this);
-                submitButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
                 submitButton->setStyleSheet(Style::sheet("button_blue"));
+                submitButton->setFixedWidth(180);
+                submitButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
                 connect(submitButton, &QPushButton::clicked, this, &InterfaceTimedGame::submitAnswer);
 
                 QHBoxLayout *buttonLayout = new QHBoxLayout();

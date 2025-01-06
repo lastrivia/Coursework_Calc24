@@ -37,11 +37,15 @@ namespace calc {
 
             QPushButton *randomButton = new QPushButton("随机取数", this);
             randomButton->setStyleSheet(Style::sheet("button_white"));
+            randomButton->setIcon(QIcon("img/icon_button_refresh.png"));
+            randomButton->setIconSize(QSize(20, 20));
+            randomButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             connect(randomButton, &QPushButton::clicked, this, &InterfaceCalculator::randomNumbers);
             buttonLayout->addWidget(randomButton);
 
             QPushButton *solveButton = new QPushButton("求解", this);
             solveButton->setStyleSheet(Style::sheet("button_blue"));
+            solveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             connect(solveButton, &QPushButton::clicked, this, &InterfaceCalculator::solveProblem);
             buttonLayout->addWidget(solveButton);
 

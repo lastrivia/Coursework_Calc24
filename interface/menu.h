@@ -15,8 +15,8 @@ namespace calc {
             setIconSize(QSize(24, 24));
 
             QStringList items = {"基本计算", "文件处理", "计时挑战", "联网比赛", "设置"};
-            QStringList icons = {"img/icon_1.png", "img/icon_2.png", "img/icon_3.png", "img/icon_4.png",
-                                 "img/icon_5.png"};
+            QStringList icons = {"img/icon_menu_calculator.png", "img/icon_menu_file.png", "img/icon_menu_clock.png", "img/icon_menu_battle.png",
+                                 "img/icon_menu_settings.png"};
 
             for (int i = 0; i < items.size(); ++i) {
                 QListWidgetItem *item = new QListWidgetItem(items[i]);
