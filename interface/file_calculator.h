@@ -81,7 +81,7 @@ namespace calc {
 
             saveButton = new QPushButton("保存结果");
             saveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            saveButton->setEnabled(false);  // 初始状态为不可点击
+            saveButton->setEnabled(false);
             saveButton->setStyleSheet(Style::sheet("button_white"));
             connect(saveButton, &QPushButton::clicked, this, &InterfaceFileCalculator::saveFile);
             operationLayout->addWidget(saveButton);
