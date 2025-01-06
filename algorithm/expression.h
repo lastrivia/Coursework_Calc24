@@ -220,6 +220,9 @@ namespace calc {
             expression<T> *current_expression, *expression_right;
 
             try {
+                if(str.empty())
+                    throw std::invalid_argument("");
+
                 bool next_negative_acceptance_flag = true;
                 while (!ss.eof()) {
 
