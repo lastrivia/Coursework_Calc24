@@ -70,6 +70,7 @@ add_custom_target(CopyResources ALL
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLL_FILES} ${CMAKE_BINARY_DIR}
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/img ${CMAKE_BINARY_DIR}/img
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/styles ${CMAKE_BINARY_DIR}/styles
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/latexmk-build/description_cn.pdf ${CMAKE_SOURCE_DIR}/description_cn.pdf
 )
 
 add_dependencies(Calc CopyResources)

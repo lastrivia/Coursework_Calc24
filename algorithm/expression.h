@@ -211,7 +211,7 @@ namespace calc {
             return ss.str();
         }
 
-        expression(std::string str) { // NOLINT
+        expression(const std::string &str) { // NOLINT
             std::stringstream ss(str);
             std::stack<int> operator_stack, temp_operator_stack;
             std::stack<expression<T> *> operand_stack, temp_operand_stack;
