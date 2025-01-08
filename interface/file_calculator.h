@@ -12,10 +12,11 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QProcess>
 
 #include <fstream>
 #include <filesystem>
-#include <QProcess>
+#include <thread>
 
 #include "../algorithm/solver.h"
 #include "../algorithm/utils.h"
@@ -140,19 +141,42 @@ namespace calc {
                     }
                     fin.close();
 
+
                     int n = (int) file_operands.size();
                     file_results.resize(n);
                     file_result_strings.resize(n);
 
-                    solver solver_instance(4, 24);
-                    for (int i = 0; i < n; ++i) {
-                        solver_instance.set_operands(file_operands[i]);
-                        file_results[i] = solver_instance.solve(file_result_strings[i]);
+                    if (maxThreads == 1) {
+                        solver solver_instance(4, 24);
+                        for (int i = 0; i < n; ++i) {
+                            solver_instance.set_operands(file_operands[i]);
+                            file_results[i] = solver_instance.solve(file_result_strings[i]);
+                        }
+                        std::stringstream ss;
+                        ss << "已完成 " << file_operands.size() << " 组计算，点击导出结果";
+                        resultLabel->setText(ss.str().c_str());
+                    }
+                    else {
+                        int cores = (int) std::thread::hardware_concurrency();
+                        int using_threads = std::min({maxThreads, cores, n});
+                        std::vector<int> indices(using_threads + 1);
+                        for (int i = 0; i <= using_threads; ++i)
+                            indices[i] = n * i / using_threads;
+
+                        std::vector<std::thread> threads;
+                        for (int i = 0; i < using_threads; ++i)
+                            threads.push_back(std::thread(&InterfaceFileCalculator::solverThread,
+                                                          this, indices[i], indices[i + 1]));
+
+                        for (auto &t: threads)
+                            t.join();
+
+                        std::stringstream ss;
+                        ss << using_threads << " 个线程已完成 " << file_operands.size() << " 组计算，点击导出结果";
+                        resultLabel->setText(ss.str().c_str());
                     }
 
-                    std::stringstream ss;
-                    ss << "已完成 " << file_operands.size() << " 组计算，点击导出结果";
-                    resultLabel->setText(ss.str().c_str());
+
                     resultIndicatorIcon->setPixmap(QIcon("img/icon_button_start.png").pixmap(20, 20));
                     saveButton->setEnabled(true);
                 }
@@ -180,9 +204,20 @@ namespace calc {
                     fout << '\n';
                 }
 
+                fout.close();
                 QProcess::startDetached("notepad.exe", QStringList() << savePath);
             }
             else QMessageBox::warning(this, "保存失败", "错误：文件拒绝访问");
+        }
+
+    private:
+
+        void solverThread(int index_begin, int index_end) {
+            solver solver_instance(4, 24);
+            for (int i = index_begin; i < index_end; ++i) {
+                solver_instance.set_operands(file_operands[i]);
+                file_results[i] = solver_instance.solve(file_result_strings[i]);
+            }
         }
     };
 

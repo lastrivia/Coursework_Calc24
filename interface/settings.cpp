@@ -123,7 +123,7 @@ namespace calc {
                 1,
                 32,
                 &fileCalculatorWidgetLink->maxThreads,
-                "文件处理线程数 (TODO)",
+                "文件处理线程数",
                 this
         );
         settingItem[1] = new SettingWidgetBool(
