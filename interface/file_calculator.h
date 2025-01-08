@@ -146,15 +146,15 @@ namespace calc {
                     file_results.resize(n);
                     file_result_strings.resize(n);
 
+                    std::stringstream result_info_ss;
+
                     if (maxThreads == 1) {
                         solver solver_instance(4, 24);
                         for (int i = 0; i < n; ++i) {
                             solver_instance.set_operands(file_operands[i]);
                             file_results[i] = solver_instance.solve(file_result_strings[i]);
                         }
-                        std::stringstream ss;
-                        ss << "已完成 " << file_operands.size() << " 组计算，点击导出结果";
-                        resultLabel->setText(ss.str().c_str());
+                        result_info_ss << "已完成 " << file_operands.size() << " 组计算，点击导出结果";
                     }
                     else {
                         int cores = (int) std::thread::hardware_concurrency();
@@ -171,12 +171,12 @@ namespace calc {
                         for (auto &t: threads)
                             t.join();
 
-                        std::stringstream ss;
-                        ss << using_threads << " 个线程已完成 " << file_operands.size() << " 组计算，点击导出结果";
-                        resultLabel->setText(ss.str().c_str());
+                        result_info_ss << using_threads << " 个线程已完成 " << file_operands.size() << " 组计算，点击导出结果";
                     }
 
-
+                    if (outputFileStrings)
+                        result_info_ss << "（表达式输出已启用）";
+                    resultLabel->setText(result_info_ss.str().c_str());
                     resultIndicatorIcon->setPixmap(QIcon("img/icon_button_start.png").pixmap(20, 20));
                     saveButton->setEnabled(true);
                 }
