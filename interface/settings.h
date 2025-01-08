@@ -67,6 +67,7 @@ namespace calc {
 
         void reset() override {
             lineEdit->setText(QString("%1").arg(defaultValue));
+            emit lineEdit->editingFinished();
         }
     };
 
@@ -87,7 +88,6 @@ namespace calc {
 
         void reset() override {
             checkBox->setChecked(defaultValue);
-            setLabel();
         };
 
         void setLabel() {
