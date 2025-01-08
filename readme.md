@@ -8,6 +8,10 @@
 
 Updates:
 
+V2.2
+* Settings page
+* Multithreaded file processing
+
 V2.1 
 * New illustration resources
 * Improved UI design
