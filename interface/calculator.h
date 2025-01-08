@@ -20,7 +20,8 @@ namespace calc {
 
         PokerDisplayWidget *pokers[4];
         QLineEdit *resultLineEdit;
-        InterfaceTimedGame *timedGameWidget;
+
+        InterfaceTimedGame *timedGameWidgetLink;
 
     public:
         InterfaceCalculator(QWidget *parent = nullptr) : QWidget(parent) {
@@ -38,7 +39,7 @@ namespace calc {
             QHBoxLayout *buttonLayout = new QHBoxLayout();
 
             QPushButton *randomButton = new QPushButton("随机取数", this);
-            randomButton->setStyleSheet(Style::sheet("button_white"));
+            randomButton->setStyleSheet(Style::QSSKey("button_white"));
             randomButton->setIcon(QIcon("img/icon_button_refresh.png"));
             randomButton->setIconSize(QSize(20, 20));
             randomButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -46,13 +47,13 @@ namespace calc {
             buttonLayout->addWidget(randomButton);
 
             QPushButton *solveButton = new QPushButton("求解", this);
-            solveButton->setStyleSheet(Style::sheet("button_blue"));
+            solveButton->setStyleSheet(Style::QSSKey("button_blue"));
             solveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             connect(solveButton, &QPushButton::clicked, this, &InterfaceCalculator::solveProblem);
             buttonLayout->addWidget(solveButton);
 
             resultLineEdit = new QLineEdit(this);
-            resultLineEdit->setStyleSheet(Style::sheet("edit_box"));
+            resultLineEdit->setStyleSheet(Style::QSSKey("edit_box"));
             resultLineEdit->setReadOnly(true);
             buttonLayout->addWidget(resultLineEdit);
 
@@ -61,7 +62,7 @@ namespace calc {
 
             setLayout(mainLayout);
 
-            timedGameWidget = nullptr;
+            timedGameWidgetLink = nullptr;
         }
 
     private slots:
@@ -94,17 +95,17 @@ namespace calc {
                 resultLineEdit->setText("无解");
 
 
-            if(timedGameWidget && timedGameWidget->gameStarted()) {
-                auto game_operands = timedGameWidget->getOperands();
+            if(timedGameWidgetLink && timedGameWidgetLink->gameStarted()) {
+                auto game_operands = timedGameWidgetLink->getOperands();
                 if(same_elements(input_operand, game_operands))
-                    timedGameWidget->setCheatFlag();
+                    timedGameWidgetLink->setCheatFlag();
             }
         }
 
     public:
 
         void connectTimedGame(InterfaceTimedGame *timedGame) {
-            timedGameWidget = timedGame;
+            timedGameWidgetLink = timedGame;
         }
     };
 

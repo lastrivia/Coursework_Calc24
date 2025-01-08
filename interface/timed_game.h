@@ -14,13 +14,17 @@
 
 #include "../algorithm/expression.h"
 #include "../algorithm/solver.h"
+#include "../algorithm/random.h"
+#include "poker_display.h"
+#include "settings.h"
 
 namespace calc {
 
     class InterfaceTimedGame : public QWidget {
     Q_OBJECT
 
-        int currentScore, highScore;
+        int currentScore;
+        SETTING_SAVED_DATA int highScore;
         int timeLeft;
         int correctCount, abandonCount;
 
@@ -38,11 +42,14 @@ namespace calc {
         PokerDisplayWidget *pokers[4];
         std::vector<rational> operands;
 
-        static constexpr int timeLimit = 120, timeWarningLimit = 20;
+        SETTING_OPTION_DATA int timeLimit;
+        static constexpr int timeWarningLimit = 20;
         static constexpr int correctReward = 100, correctCountReward = 20,
                 incorrectPunishment = 10, abandonPunishment = 10, abandonCountPunishment = 10;
 
     public:
+        friend class InterfaceSettings;
+
         InterfaceTimedGame(QWidget *parent = nullptr)
                 : QWidget(parent), currentScore(0), highScore(0), timeLeft(0) {
 
@@ -60,14 +67,14 @@ namespace calc {
             QHBoxLayout *topLayoutH = new QHBoxLayout;
             timerIconLabel = new QLabel;
             timerIconLabel->setPixmap(QIcon("img/icon_menu_clock.png").pixmap(28, 28));
-            timerIconLabel->setStyleSheet(Style::sheet("scoreboard"));
+            timerIconLabel->setStyleSheet(Style::QSSKey("scoreboard"));
             topLayoutH->addWidget(timerIconLabel);
             timerLabel = new QLabel("", this);
-            timerLabel->setStyleSheet(Style::sheet("scoreboard"));
+            timerLabel->setStyleSheet(Style::QSSKey("scoreboard"));
             scoreLabel = new QLabel("", this);
-            scoreLabel->setStyleSheet(Style::sheet("scoreboard"));
+            scoreLabel->setStyleSheet(Style::QSSKey("scoreboard"));
             highScoreLabel = new QLabel("", this);
-            highScoreLabel->setStyleSheet(Style::sheet("scoreboard"));
+            highScoreLabel->setStyleSheet(Style::QSSKey("scoreboard"));
             topLayoutH->addWidget(timerLabel);
             topLayoutH->addStretch();
             topLayoutH->addWidget(scoreLabel);
@@ -99,7 +106,7 @@ namespace calc {
                 bottomLayoutOnStart->addItem(new QSpacerItem(0, 10, QSizePolicy::Minimum, QSizePolicy::Fixed));
 
                 startButton = new QPushButton("开始游戏", this);
-                startButton->setStyleSheet(Style::sheet("button_blue"));
+                startButton->setStyleSheet(Style::QSSKey("button_blue"));
                 startButton->setFixedWidth(180);
                 startButton->setIcon(QIcon("img/icon_button_start_w.png"));
                 startButton->setIconSize(QSize(20, 20));
@@ -122,7 +129,7 @@ namespace calc {
 
                 answerInput = new QLineEdit(this);
                 answerInput->setPlaceholderText("输入答案表达式...");
-                answerInput->setStyleSheet(Style::sheet("edit_box"));
+                answerInput->setStyleSheet(Style::QSSKey("edit_box"));
                 connect(answerInput, &QLineEdit::returnPressed, this, &InterfaceTimedGame::submitAnswer);
 
                 answerCheckIcon = new QLabel(this);
@@ -136,7 +143,7 @@ namespace calc {
                 bottomLayoutInGame->addItem(new QSpacerItem(0, 10, QSizePolicy::Minimum, QSizePolicy::Fixed));
 
                 abandonButton = new QPushButton("放弃题目", this);
-                abandonButton->setStyleSheet(Style::sheet("button_white"));
+                abandonButton->setStyleSheet(Style::QSSKey("button_white"));
                 abandonButton->setFixedWidth(180);
                 abandonButton->setIcon(QIcon("img/icon_button_refresh.png"));
                 abandonButton->setIconSize(QSize(20, 20));
@@ -144,7 +151,7 @@ namespace calc {
                 connect(abandonButton, &QPushButton::clicked, this, &InterfaceTimedGame::refreshProblemClick);
 
                 submitButton = new QPushButton("提交答案", this);
-                submitButton->setStyleSheet(Style::sheet("button_blue"));
+                submitButton->setStyleSheet(Style::QSSKey("button_blue"));
                 submitButton->setFixedWidth(180);
                 submitButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
                 connect(submitButton, &QPushButton::clicked, this, &InterfaceTimedGame::submitAnswer);

@@ -31,12 +31,12 @@ namespace calc {
 
     public:
 
-        static QString const &sheet(const QString &str) {
+        static QString const &QSSKey(const QString &key) {
 
             static Style styleInstance;
 
-            if (styleInstance.stylesheetMap.find(str) != styleInstance.stylesheetMap.end())
-                return styleInstance.stylesheetMap[str];
+            if (styleInstance.stylesheetMap.find(key) != styleInstance.stylesheetMap.end())
+                return styleInstance.stylesheetMap[key];
             return styleInstance.emptyString;
         }
     };

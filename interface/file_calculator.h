@@ -20,6 +20,7 @@
 #include "../algorithm/solver.h"
 #include "../algorithm/utils.h"
 #include "style.h"
+#include "settings.h"
 
 namespace calc {
 
@@ -31,14 +32,18 @@ namespace calc {
         QLabel *resultLabel, *resultIndicatorIcon;
         QPushButton *openFileButton, *calculateButton, *saveButton;
 
+        SETTING_OPTION_DATA int maxThreads;
+        SETTING_OPTION_DATA bool outputFileStrings;
         std::vector<std::vector<rational> > file_operands;
         std::vector<int> file_results;
-        std::vector<std::string> file_result_strings; // TODO unused yet
+        std::vector<std::string> file_result_strings;
 
     public:
+        friend class InterfaceSettings;
+
         InterfaceFileCalculator(QWidget *parent = nullptr) : QWidget(parent) {
 
-            Style::sheet("button_white");
+            Style::QSSKey("button_white");
 
             QHBoxLayout *fileLayout = new QHBoxLayout;
 
@@ -49,14 +54,14 @@ namespace calc {
             fileLayout->addItem(new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Minimum));
 
             filePathInput = new QLineEdit;
-            filePathInput->setStyleSheet(Style::sheet("edit_box"));
+            filePathInput->setStyleSheet(Style::QSSKey("edit_box"));
             fileLayout->addWidget(filePathInput);
 
             fileLayout->addItem(new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Minimum));
 
             openFileButton = new QPushButton("选择文件");
             openFileButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            openFileButton->setStyleSheet(Style::sheet("button_white"));
+            openFileButton->setStyleSheet(Style::QSSKey("button_white"));
             QFont font;
             font.setPointSize(11);
             openFileButton->setFont(font);
@@ -68,7 +73,7 @@ namespace calc {
 
             calculateButton = new QPushButton("执行运算");
             calculateButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            calculateButton->setStyleSheet(Style::sheet("button_blue"));
+            calculateButton->setStyleSheet(Style::QSSKey("button_blue"));
             connect(calculateButton, &QPushButton::clicked, this, &InterfaceFileCalculator::performCalculation);
             operationLayout->addWidget(calculateButton);
 
@@ -84,7 +89,7 @@ namespace calc {
             operationLayout->addItem(new QSpacerItem(10, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
             saveButton = new QPushButton("保存结果");
-            saveButton->setStyleSheet(Style::sheet("button_white"));
+            saveButton->setStyleSheet(Style::QSSKey("button_white"));
             saveButton->setIcon(QIcon("img/icon_button_save.png"));
             saveButton->setIconSize(QSize(20, 20));
             saveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -170,7 +175,8 @@ namespace calc {
                     else fout << '-';
                     for (int j = 0; j < 4; ++j)
                         fout << '\t' << int_to_poker((int) file_operands[i][j]);
-                    // fout << '\t' << file_result_strings[i];
+                    if (outputFileStrings)
+                        fout << '\t' << file_result_strings[i];
                     fout << '\n';
                 }
 

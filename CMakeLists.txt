@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.28)
 project(Calc)
 
-set(APP_VERSION "2.1")
-set(APP_VERSION_COMMA "2,1")
+set(APP_VERSION "2.2")
+set(APP_VERSION_COMMA "2,2")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
@@ -48,6 +48,7 @@ add_executable(Calc WIN32
         interface/timed_game.h
         interface/online_game.h
         interface/settings.h
+        interface/settings.cpp
         interface/poker_display.h
         interface/style.h
 )

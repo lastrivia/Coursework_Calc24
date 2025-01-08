@@ -36,7 +36,7 @@ namespace calc {
             format.setSwapInterval(1);
             QSurfaceFormat::setDefaultFormat(format);
 
-            setStyleSheet(Style::sheet("main_window"));
+            setStyleSheet(Style::QSSKey("main_window"));
 
             QWidget *centralWidget = new QWidget(this);
             setCentralWidget(centralWidget);
@@ -46,17 +46,17 @@ namespace calc {
 
             QStackedWidget *stackedWidget = new QStackedWidget(this);
             auto *pageCalculator = new InterfaceCalculator;
-            auto *pageFile = new InterfaceFileCalculator;
+            auto *pageFileCalculator = new InterfaceFileCalculator;
             auto *pageTimedGame = new InterfaceTimedGame;
             auto *pageOnlineGame = new InterfaceOnlineGame;
-            auto *pageSettings = new InterfaceSettings;
+            auto *pageSettings = new InterfaceSettings(pageFileCalculator, pageTimedGame);
 
             pageCalculator->connectTimedGame(pageTimedGame);
 
             QGraphicsOpacityEffect *effectBasic = new QGraphicsOpacityEffect(pageCalculator);
             pageCalculator->setGraphicsEffect(effectBasic);
-            QGraphicsOpacityEffect *effectFile = new QGraphicsOpacityEffect(pageFile);
-            pageFile->setGraphicsEffect(effectFile);
+            QGraphicsOpacityEffect *effectFile = new QGraphicsOpacityEffect(pageFileCalculator);
+            pageFileCalculator->setGraphicsEffect(effectFile);
             QGraphicsOpacityEffect *effectTimedGame = new QGraphicsOpacityEffect(pageTimedGame);
             pageTimedGame->setGraphicsEffect(effectTimedGame);
             QGraphicsOpacityEffect *effectOnlineGame = new QGraphicsOpacityEffect(pageOnlineGame);
@@ -66,7 +66,7 @@ namespace calc {
             effectBasic->setOpacity(1.0);
 
             stackedWidget->addWidget(pageCalculator);
-            stackedWidget->addWidget(pageFile);
+            stackedWidget->addWidget(pageFileCalculator);
             stackedWidget->addWidget(pageTimedGame);
             stackedWidget->addWidget(pageOnlineGame);
             stackedWidget->addWidget(pageSettings);

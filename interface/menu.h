@@ -31,7 +31,7 @@ namespace calc {
             setFocusPolicy(Qt::NoFocus);
             setCurrentRow(0);
 
-            setStyleSheet(Style::sheet("menu_list"));
+            setStyleSheet(Style::QSSKey("menu_list"));
         }
 
     };
