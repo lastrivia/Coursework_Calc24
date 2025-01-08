@@ -192,10 +192,13 @@ namespace calc {
 
             if (fout.is_open()) {
                 int n = (int) file_operands.size();
+                int count = 0;
 
                 for (int i = 0; i < n; ++i) {
-                    if (file_results[i])
+                    if (file_results[i]) {
                         fout << '+';
+                        ++count;
+                    }
                     else fout << '-';
                     for (int j = 0; j < 4; ++j)
                         fout << '\t' << int_to_poker((int) file_operands[i][j]);
@@ -203,6 +206,8 @@ namespace calc {
                         fout << '\t' << file_result_strings[i];
                     fout << '\n';
                 }
+
+                fout << count << '/' << n;
 
                 fout.close();
                 QProcess::startDetached("notepad.exe", QStringList() << savePath);
