@@ -5,6 +5,7 @@
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QDesktopServices>
 
 #define SETTING_OPTION_DATA
 #define SETTING_SAVED_DATA
@@ -48,7 +49,14 @@ namespace calc {
 
     private slots:
 
-        void resetClick();
+        void resetClick() {
+            for (auto i: settingItem)
+                i->reset();
+        }
+
+        static void openGitHubPage() {
+            QDesktopServices::openUrl(QUrl("https://github.com/lastrivia/Coursework_Calc24"));
+        }
     };
 
 
@@ -91,7 +99,7 @@ namespace calc {
         };
 
         void setLabel() {
-            if(checkBox->isChecked())
+            if (checkBox->isChecked())
                 statusLabel->setText("开");
             else
                 statusLabel->setText("关");

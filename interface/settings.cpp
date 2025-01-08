@@ -162,11 +162,22 @@ namespace calc {
         resetButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         connect(resetButton, &QPushButton::clicked, this, &InterfaceSettings::resetClick);
 
+        gitHubButton = new QPushButton("项目主页", this);
+        gitHubButton->setStyleSheet(Style::QSSKey("button_dark"));
+        gitHubButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        connect(gitHubButton, &QPushButton::clicked, this, &InterfaceSettings::openGitHubPage);
+
         settingsLayout->addSpacerItem(new QSpacerItem(0, 40, QSizePolicy::Minimum, QSizePolicy::Fixed));
         settingsLayout->addWidget(resetButton, 0, Qt::AlignCenter);
-
         settingsLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
-        setLayout(settingsLayout);
+        settingsLayout->addWidget(gitHubButton, 0, Qt::AlignCenter);
+        settingsLayout->addSpacerItem(new QSpacerItem(0, 40, QSizePolicy::Minimum, QSizePolicy::Fixed));
+
+        QHBoxLayout *mainLayout = new QHBoxLayout(this);
+        mainLayout->addSpacerItem(new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Minimum));
+        mainLayout->addLayout(settingsLayout);
+        mainLayout->addSpacerItem(new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Minimum));
+        setLayout(mainLayout);
     }
 
     InterfaceSettings::~InterfaceSettings() {
@@ -179,10 +190,5 @@ namespace calc {
             fout << "timedGame.highScore: " << timedGameWidgetLink->highScore << "\n";
             fout << "timedGame.timeLimit: " << timedGameWidgetLink->timeLimit << "\n";
         }
-    }
-
-    void InterfaceSettings::resetClick() {
-        for (auto i: settingItem)
-            i->reset();
     }
 }
